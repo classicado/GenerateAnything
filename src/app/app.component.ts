@@ -11,9 +11,9 @@ import { AppConfig } from '../environments/environment';
 export class AppComponent {
   constructor(
     public electronService: ElectronService,
-    private translate: TranslateService
+  //  private translate: TranslateService
   ) {
-    translate.setDefaultLang('en');
+ //   translate.setDefaultLang('en');
     console.log('AppConfig', AppConfig);
 
     if (electronService.isElectron) {
@@ -26,3 +26,4 @@ export class AppComponent {
     }
   }
 }
+
