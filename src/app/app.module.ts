@@ -57,19 +57,7 @@ import { DetailModule } from './detail/detail.module';
 
 import { AppComponent } from './app.component';
 
-
-@NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    CoreModule,
-    SharedModule,
-   
-    AppRoutingModule, 
-    BrowserAnimationsModule,
-     
+const materialModules = [
     MatAutocompleteModule,
     MatBadgeModule,
     MatBottomSheetModule,
@@ -105,10 +93,26 @@ import { AppComponent } from './app.component';
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
- 
+];
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    CoreModule,
+    SharedModule,
+    HomeModule,
+    DetailModule,   
+    AppRoutingModule, 
+    BrowserAnimationsModule,
+     
+   
+    ...materialModules
   ],
   exports: [
- 
+  
   ],
   providers: [],
   bootstrap: [AppComponent]

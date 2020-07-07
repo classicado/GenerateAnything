@@ -14,40 +14,42 @@ export class HomeComponent implements OnInit {
 
   console.log("Init Home");
 
- 			var sql = window.require("mssql");
-            // config for your database
-            var config = {
-                user: 'generator',
-                password: 'Password1',
-                server: 'MEDIAPC\\SQLEXPRESS01',  
-                database: 'GeneratorDemo'  
-            };
+ 			// var sql = window.require("mssql");
+    //         // config for your database
+    //         var config = {
+    //             user: 'generator',
+    //             password: 'Password1',
+    //             server: 'MEDIAPC\\SQLEXPRESS01',  
+    //             database: 'GeneratorDemo'  
+    //         };
 
-            // connect to your database
-            sql.connect(config, function (err) {
+    //         // connect to your database
+    //         sql.connect(config, function (err) {
             
-                if (err){
-                  console.log(err);
-                } else{
-                    // create Request object
-                  var request = new sql.Request();
+    //             if (err){
+    //               console.log(err);
+    //             } else{
+    //                 // create Request object
+    //               var request = new sql.Request();
                      
-                  // query to the database and get the records
-                  request.query('select * from Users', function (err, recordset) {
+    //               // query to the database and get the records
+    //               request.query('select * from Users', function (err, recordset) {
                       
-                      if (err) console.log(err);
-                      else console.log(recordset);
+    //                   if (err) console.log(err);
+    //                   else console.log(recordset);
 
 
-                          //self.err = err;
-                        //  self.recordset = recordset;
-                      // send records as a response
-                   //   res.send(recordset);
+    //                       //self.err = err;
+    //                     //  self.recordset = recordset;
+    //                   // send records as a response
+    //                //   res.send(recordset);
                       
-                  });
-                } 
-            }); 
+    //               });
+    //             } 
+    //         }); 
+
 
   }
 
 }
+
