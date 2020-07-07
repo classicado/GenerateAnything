@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { MssqlService } from '../services/mssql.service';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -8,11 +10,18 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    public sql : MssqlService
+    ) {  
+  }
 
   ngOnInit(): void { 
 
-  console.log("Init Home");
+    console.log("Init Home");
+
+//this.sql.query("") 
+//    console.log( this.sql.query("") );
 
  			// var sql = window.require("mssql");
     //         // config for your database
@@ -51,5 +60,13 @@ export class HomeComponent implements OnInit {
 
   }
 
+
+
+
+  runSQLQuery(): void{
+      console.log("Run in  Home page");
+
+        this.sql.query("");
+  }
 }
 
