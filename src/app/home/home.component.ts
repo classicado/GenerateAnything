@@ -10,6 +10,8 @@ import { MssqlService } from '../services/mssql.service';
 })
 export class HomeComponent implements OnInit {
 
+  tablesList : any[];
+
   constructor(
     private router: Router,
     public sql : MssqlService
@@ -75,7 +77,8 @@ export class HomeComponent implements OnInit {
         console.log( "RESPONSE: " );
         console.log( tables );
 
-        // for (let tableObj of tables) { 
+        this.tablesList = tables;
+        // for (let tableObj of tablesList) { 
         //   console.log( tableObj );
         //  // this.availableTables.push( tableObj.name ) 
         // }

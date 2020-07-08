@@ -13,5 +13,26 @@
 <div>
 	 <mat-slider min="1" max="100" step="1" value="1"></mat-slider>
 
- 	<button mat-raised-button  (click)="runSQLQuery()">Basic2</button>	
+ 	<button mat-raised-button  (click)="runSQLQuery()">Connect To DB </button>	
+ <!--
+	<br>
+	<label>Select a Table</label>
+	<br>
+ 	<select [(ngModel)]="selectedTable" (change)="tableChanged()">
+		<option *ngFor="let sel_table of availableTables" [value]="sel_table">{{sel_table.TABLE_NAME }}</option>
+	</select> -->
+	<br>
+
+
+
+	<ul class="heroes" >
+	  <li *ngFor="let hero of tablesList.recordset">
+	      {{hero.TABLE_NAME}}
+	  </li>
+	</ul>
+
+
+
+
+
 </div>

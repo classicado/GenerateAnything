@@ -70,7 +70,7 @@ export class MssqlService {
 
     async getTables(): Promise<any>{
  
-
+    	console.log( mssql );
  		return new mssql.Request().query(queryStringAllTables);
     	/*var deferred = $q.defer();
 
