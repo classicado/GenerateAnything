@@ -66,7 +66,26 @@ export class HomeComponent implements OnInit {
   runSQLQuery(): void{
       console.log("Run in  Home page");
 
-        this.sql.query("");
+      this.sql.query("");
+
+      this.sql
+      .getTables()
+      .then( tables => { 
+
+        console.log( "RESPONSE: " );
+        console.log( tables );
+
+        // for (let tableObj of tables) { 
+        //   console.log( tableObj );
+        //  // this.availableTables.push( tableObj.name ) 
+        // }
+      }).catch(err => {
+        console.log( err );
+      });
+
+      
+
+
   }
 }
 
