@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { MssqlService } from '../services/mssql.service';
-import { _ } from 'underscore';
-
+ 
+ import * as _ from "lodash"
+import * as fs from 'fs';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -95,10 +96,10 @@ export class HomeComponent implements OnInit {
 
 
 
-    function getOurGeneratorFriendlyTableColumns( tableColumns): any{
+    getOurGeneratorFriendlyTableColumns( tableColumns): any{
         var columns = [];
-        angular.forEach(tableColumns, function(column){
 
+        tableColumns.forEach(column => {
             var column_name = column["COLUMN_NAME"]; 
             var field_name = column_name;
 
@@ -134,10 +135,12 @@ export class HomeComponent implements OnInit {
                 CheckboxSelected : column["CheckboxSelected"] || false
             });  
             
+
         });
+         
         return columns;
     }
-    function GenerateProcs( dbName: string,tableName: string,  modelName: string,columns: string) : void
+     GenerateProcs( dbName: string,tableName: string,  modelName: string,columns: any) : void
         {
             var select_list_1 = "USE " + dbName + "\nGO\n\n"+ 
                             "DROP PROCEDURE IF EXISTS [dbo].[" + modelName + "SelectList]; \nGO\n\n"+
@@ -480,27 +483,29 @@ export class HomeComponent implements OnInit {
             delete_3 = delete_3 + "END";
  
             var scriptsFolder = '../scripts/';
-            createFolder(scriptsFolder);
-            createFolder(scriptsFolder+ tableName+"/");
-            writeFile(scriptsFolder + tableName +"/" + modelName + "SelectList.sql",select_list_1 + select_list_2 + select_list_from + select_list_where + select_list_search + select_list_4);
-            writeFile(scriptsFolder + tableName +"/" + modelName + "Count.sql",select_count_1 + select_count_2 + select_count_3);
-            writeFile(scriptsFolder + tableName +"/" + modelName + "SelectSingle.sql",select_single_1 + select_single_2 + select_single_3);
-            writeFile(scriptsFolder + tableName +"/" + modelName + "Update.sql",update_1 + update_2 + update_3);
-            writeFile(scriptsFolder + tableName +"/" + modelName + "Insert.sql",insert_1 + insert_2 + insert_3);
-            writeFile(scriptsFolder + tableName +"/" + modelName + "Delete.sql",delete_1 + delete_2 + delete_3); 
+            this.createFolder(scriptsFolder);
+            this.createFolder(scriptsFolder+ tableName+"/");
+            this.writeFile(scriptsFolder + tableName +"/" + modelName + "SelectList.sql",select_list_1 + select_list_2 + select_list_from + select_list_where + select_list_search + select_list_4);
+            this.writeFile(scriptsFolder + tableName +"/" + modelName + "Count.sql",select_count_1 + select_count_2 + select_count_3);
+            this.writeFile(scriptsFolder + tableName +"/" + modelName + "SelectSingle.sql",select_single_1 + select_single_2 + select_single_3);
+            this.writeFile(scriptsFolder + tableName +"/" + modelName + "Update.sql",update_1 + update_2 + update_3);
+            this.writeFile(scriptsFolder + tableName +"/" + modelName + "Insert.sql",insert_1 + insert_2 + insert_3);
+            this.writeFile(scriptsFolder + tableName +"/" + modelName + "Delete.sql",delete_1 + delete_2 + delete_3); 
         }
          
-
-        function writeFile(filename,content) {
-            fs = require('fs');
+        createFile():void {
+          this.writeFile("C:\\Work\\GenerateAnything\\test.txt","Hello");
+        }
+        writeFile(filename,content) : void{
+            var fs = require('fs');
             fs.writeFile(filename,content, function(err) {
                 if(err) {
-                    alert("error");
+                    alert( err);
                 }
                 console.log( "Done writing a file");
             });        
         }  
-        function createFolder(dir) {
+        createFolder(dir)  : void{
             var fs = require('fs'); 
 
             if (!fs.existsSync(dir)){
