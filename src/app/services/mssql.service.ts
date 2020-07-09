@@ -11,11 +11,7 @@ const config = {
 
 
 
-const queryStringAllTables = "SELECT TABLE_NAME FROM Information_Schema.Tables where Table_Type = 'BASE TABLE' and not TABLE_NAME like '[_]%' order by TABLE_NAME";                             
-
-
-var fs = require('fs'),
-    Rx = require('rx');
+const queryStringAllTables = "SELECT TABLE_NAME FROM Information_Schema.Tables where Table_Type = 'BASE TABLE' and not TABLE_NAME like '[_]%' order by TABLE_NAME"; 
 
 
 @Injectable({
@@ -24,20 +20,7 @@ var fs = require('fs'),
 export class MssqlService {
 
 	connection: any;
- 
-    // constructor() {
-    //     this.connection = mssql.connect(config);
-
-    //     this.connection.connect((err) => {
-    //        if (err) {
-    //          console.log('error connecting', err);
-    //        }else
-    //        {
-    //        	console.log('Conencted');
-    //        }
-    //     });
-    // }
- 
+  
 	constructor() {
 		    
 		mssql.connect(config).then(result => {
@@ -69,18 +52,8 @@ export class MssqlService {
     }
 
     async getTables(): Promise<any>{
- 
-    	console.log( mssql );
- 		return new mssql.Request().query(queryStringAllTables);
-    	/*var deferred = $q.defer();
-
-		 new mssql.Request().query(queryStringAllTables, function (err, recordset) {
-                    
-            if (err) deferred.reject(err); 
-			deferred.resolve(recordset);  
-        });
-   		return deferred.promise;*/
+  
+ 		return new mssql.Request().query(queryStringAllTables); 
     }
  
-		//return Rx.Observable.fromCallback(this.getSQLdata()) 
 }
