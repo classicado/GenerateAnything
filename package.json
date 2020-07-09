@@ -99,6 +99,7 @@
     "@angular/forms": "^9.0.0 || ^10.0.0-0",
     "@angular/material": "9.2.4",
     "mssql": "6.2.0",
-    "tedious": "8.3.0"
+    "tedious": "8.3.0",
+    "underscore": "1.10.2"
   }
 }
