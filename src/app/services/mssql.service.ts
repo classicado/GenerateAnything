@@ -26,7 +26,9 @@ export class MssqlService {
 		mssql.connect(config).then(result => {
 		    console.log("========== Connected ===========");
 		    console.log(result);
+		     console.log(mssql);
 		}).catch(err => {
+			console.log(mssql);
 		  	console.log(err);
 		});
 	   
@@ -54,6 +56,20 @@ export class MssqlService {
     async getTables(): Promise<any>{
   
  		return new mssql.Request().query(queryStringAllTables); 
+
     }
- 
+
+	openConnection(): void{
+		console.log("========== Opening connection ===========");
+   		mssql.connect(config).then(result => {
+		    console.log("========== Connected ===========");
+		    console.log(result);
+		     console.log(mssql);
+		}).catch(err => {
+		  	console.log(err);
+		});
+    }
+   closeConnection(): void{
+   		mssql.close();
+    }
 }

@@ -12,9 +12,11 @@
 
 <div>
 	 <mat-slider min="1" max="100" step="1" value="1"></mat-slider>
-
- 	<button mat-raised-button  (click)="runSQLQuery()">Connect To DB </button>	
+	 <br>
+	<button mat-raised-button  (click)="connectDB()">Connect DB </button>	 
+ 	<button mat-raised-button  (click)="runSQLQuery()">Get Tables </button>	
  	<button mat-raised-button  (click)="createFile()">Create File </button>	 
+
  <!--
 	<br>
 	<label>Select a Table</label>
@@ -27,7 +29,7 @@
 
 
 	<ul class="heroes" >
-	  <li *ngFor="let hero of tablesList.recordset">
+	  <li *ngFor="let hero of tablesList">
 	      {{hero.TABLE_NAME}}
 	  </li>
 	</ul>

@@ -67,6 +67,11 @@ export class HomeComponent implements OnInit {
 
 
 
+  connectDB(): void{
+      console.log("Run in  Home page");
+
+      this.sql.openConnection(); 
+  }
 
   runSQLQuery(): void{
       console.log("Run in  Home page");
@@ -80,11 +85,12 @@ export class HomeComponent implements OnInit {
         console.log( "RESPONSE: " );
         console.log( tables );
 
-        this.tablesList = tables;
+        this.tablesList = tables.recordset;
         // for (let tableObj of tablesList) { 
         //   console.log( tableObj );
         //  // this.availableTables.push( tableObj.name ) 
         // }
+      //  this.sql.closeConnection();
       }).catch(err => {
         console.log( err );
       });
