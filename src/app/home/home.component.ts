@@ -175,8 +175,9 @@ export class HomeComponent implements OnInit {
             var scriptsFolder = 'C:/Work/GenerateAnything/Generated/';
             this.createFolder(scriptsFolder);
             this.createFolder(scriptsFolder+ tableName+"/"); 
-            this.writeFile(scriptsFolder + tableName +"/" + tableName.toLowerCase() + "_model_.dart",block_1 + block_2 + block_3 + block_4 + block_5 + endLine); 
+            this.writeFile(scriptsFolder + tableName +"/" + tableName.toLowerCase() + "_model.dart",block_1 + block_2 + block_3 + block_4 + block_5 + endLine); 
         }
+        
          
  
      GenerateProcs( dbName: string,tableName: string,  modelName: string,columns: any) : void
