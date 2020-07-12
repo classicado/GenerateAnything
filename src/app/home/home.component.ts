@@ -131,7 +131,7 @@ export class HomeComponent implements OnInit {
             var select_list_3 = "\t"+ tableName +".fromJson(Map<String, dynamic> json) {\n";
             var select_list_4 = "\tMap<String, dynamic> toJson() {\n";
                 select_list_4 += "\t\tfinal Map<String, dynamic> data = new Map<String, dynamic>();\n";
-            var select_list_5 = "\t@override\n\tString toString() {\n\t\treturn '";
+            var select_list_5 = "\t@override\n\tString toString() {\n\t\treturn \n";
             var endLine = "}\n";
 
             for (var i = 0; i < columns.length; i++)
@@ -148,14 +148,14 @@ export class HomeComponent implements OnInit {
                     select_list_2 = select_list_2 + "\t\tthis." + columns[i].param_name + ",\n";
                     select_list_3 = select_list_3 + "\t\t" + columns[i].param_name +" = json['"+ columns[i].param_name + "'];\n";
                     select_list_4 = select_list_4 + "\t\tdata['" + columns[i].param_name +"'] = this."+ columns[i].param_name + ";\n";
-                    select_list_5 = select_list_5 + " ${" + columns[i].param_name +"??''},";
+                    select_list_5 = select_list_5 + "\t\t\t\t' ${" + columns[i].param_name +"??''},'\n";
                 
                 }
                 else // if it is the last column
                 {
                     select_list_1 = select_list_1 + "\t" + columns[i].data_type + " " + columns[i].param_name + ";\n";
                     select_list_2 = select_list_2 + "\t\tthis." + columns[i].param_name + "\n";
-                    select_list_5 = select_list_5 + " ${" + columns[i].param_name +"??''}}';\n";
+                    select_list_5 = select_list_5 + "\t\t\t\t' ${" + columns[i].param_name +"??''}}';\n";
                     // add the pagination for the list
                     // add the column  to the order by statement
                     // exclude IPK, IFK and Bit fields from order by criteria
