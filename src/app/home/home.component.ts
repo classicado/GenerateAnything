@@ -202,16 +202,11 @@ export class HomeComponent implements OnInit {
 
                 // Step through the columns if it is not the last column
                 if (i != columns.length - 1)
-                {
-                    // ****************** SELECT LIST *****************
-                    // add the column to the parameter list
+                { 
                     select_list_1 = select_list_1 + "\t" + columns[i].data_type + " " + columns[i].param_name + ";\n";
-
-                    // add the column to the select list
                     select_list_2 = select_list_2 + "\t\tthis." + columns[i].param_name + ",\n";
                     select_list_3 = select_list_3 + "\t\t" + columns[i].param_name +" = json['"+ columns[i].param_name + "'];\n";
                     select_list_4 = select_list_4 + "\t\tdata['" + columns[i].param_name +"'] = this."+ columns[i].param_name + ";\n";
-                          
                 }
                 else // if it is the last column
                 {
@@ -223,7 +218,6 @@ export class HomeComponent implements OnInit {
                     // exclude IPK, IFK and Bit fields from order by criteria
                     if (!(columns[i].column_name.indexOf("ipk") >= 0) && !(columns[i].column_name.indexOf("ifk") >= 0) && !columns[i].column_name.startsWith("b"))
                     {
-                        //select_list_4 = select_list_4 + "\t\tCASE WHEN @OrderBy='" + columns[i].param_name + ".ASC' THEN " + tableName + "." + columns[i].column_name + " END ASC, \n";
                         select_list_4 = select_list_4 + "\t\tdata['" + columns[i].param_name +"'] = this."+ columns[i].param_name + ";\n";
                     }
   
