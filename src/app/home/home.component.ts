@@ -216,7 +216,7 @@ export class HomeComponent implements OnInit {
                 {
                     select_list_1 = select_list_1 + "\t" + columns[i].data_type + " " + columns[i].param_name + ";\n";
                     select_list_2 = select_list_2 + "\t\tthis." + columns[i].param_name + "\n";
-                    select_list_5 = select_list_5 + " ${" + columns[i].param_name +"??''}}';";
+                    select_list_5 = select_list_5 + " ${" + columns[i].param_name +"??''}}';\n";
                     // add the pagination for the list
                     // add the column  to the order by statement
                     // exclude IPK, IFK and Bit fields from order by criteria
@@ -231,12 +231,12 @@ export class HomeComponent implements OnInit {
             select_list_2 = select_list_2 + "\t});\n\n";  
             select_list_3 = select_list_3 + "\t}\n\n"; 
             select_list_4 = select_list_4 + "\t\treturn data;\n\t}\n\n"; 
-            select_list_5 = select_list_5 + "\n"; 
+            select_list_5 = select_list_5 + "\t}\n"; 
  
             var scriptsFolder = 'C:/Work/GenerateAnything/Generated/';
             this.createFolder(scriptsFolder);
             this.createFolder(scriptsFolder+ tableName+"/"); 
-            this.writeFile(scriptsFolder + tableName +"/" + modelName + "_model_.dart",select_list_1 + select_list_2 + select_list_3 + select_list_4 + select_list_5 + endLine); 
+            this.writeFile(scriptsFolder + tableName +"/" + tableName.toLowerCase() + "_model_.dart",select_list_1 + select_list_2 + select_list_3 + select_list_4 + select_list_5 + endLine); 
         }
          
  
