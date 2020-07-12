@@ -84,6 +84,12 @@ export class HomeComponent implements OnInit {
           this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ) 
         ); 
 
+        this.GenerateAPIModel(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          this.selectedTableName,
+          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ) 
+        ); 
     }
  
     getOurGeneratorFriendlyTableColumns( tableColumns): any{
@@ -154,6 +160,62 @@ export class HomeComponent implements OnInit {
                 this.createFolder(scriptsFolder);
                 this.createFolder(scriptsFolder+ tableName+"/"); 
                 this.writeFile(scriptsFolder + tableName +"/controller." + tableName.toLowerCase() + ".cs",content); 
+            });  
+       }
+        GenerateAPIModel( dbName: string,tableName: string,  modelName: string,columns: any) : void
+        { 
+            var namespace = "namespace";
+            var storedProcPrefix = "";
+            var procPrefix = "";
+            var content = "";
+
+            var fs = require('fs'); 
+            fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\modelTemplate.txt", 'utf-8', (err, data) => {
+                if(err){
+                    alert("An error ocurred reading the file :" + err.message);
+                    return;
+                } 
+                content = data.toString();
+                content = content.replace(/%NameSpace%/g, namespace);
+                content = content.replace(/%ModelName%/g, tableName.replace("_", "")); //todo get from form
+                content = content.replace(/%TableName%/g, tableName);
+                content = content.replace(/%ProcPrefix%/g, storedProcPrefix + "_");
+  
+
+
+
+                var modelProc = "";
+                if (procPrefix == "")
+                {
+                    modelProc = "spt" + storedProcPrefix + "_" + "" + tableName.replace("_", "") + "_";
+                    content = content.replace("%ProcPrefix%", storedProcPrefix + "_");
+                }
+                else
+                {
+                    modelProc = "spt" + "_" + storedProcPrefix + "_" + "" + tableName.replace("_", "") + "_";
+                    content = content.replace("%ProcPrefix%", "_" + storedProcPrefix + "_");
+                }
+                content = content.replace("%TableName%", tableName);
+
+
+                var ListOfBaseProperties = "";
+                var AddingOfBaseProperties = "";
+                var StyleInfoForProperties = "";
+
+
+                for (var i = 0; i < columns.length; i++)
+                {
+                    console.log();
+                }
+
+                content = content.replace("%ListOfBaseProperties%", ListOfBaseProperties);
+                content = content.replace("%AddingOfBaseProperites%", AddingOfBaseProperties);
+                content = content.replace("%StyleInfoForProperties%", StyleInfoForProperties);
+
+                var scriptsFolder = 'C:/Work/GenerateAnything/Generated/';
+                this.createFolder(scriptsFolder);
+                this.createFolder(scriptsFolder+ tableName+"/"); 
+                this.writeFile(scriptsFolder + tableName +"/model." + tableName.toLowerCase() + ".cs",content); 
             });  
        }
 

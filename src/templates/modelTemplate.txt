@@ -1,0 +1,115 @@
+﻿using BaseClasses;
+using System.Collections.Generic;
+using System;
+using System.Runtime.Serialization;
+using BaseClasses.Handlers;
+using System.Linq;
+
+namespace %NameSpace%.Models
+{
+    [DataContract(Name = "%ModelName%")]
+    public class %ModelName% : DBBridge
+    {
+        internal static new string model_name = "%ModelName%";
+        protected internal new string table_name = "%TableName%";
+        protected internal ConversionHandler handler = new ConversionHandler();
+
+        %ListOfBaseProperties%
+
+        // Pagination parameters
+        [BasePropertyInfo(SQLParam = SQLParam.pNotSQLParam, ParamName = "Search")]
+        public string Search { get { return this.handler.ConvertBasePropertyAllowNull(Property("Search")); } set { BaseProperty prop = this.property_list.Find(p => p.identify_name == "Search"); prop.value = value; } }
+
+        [BasePropertyInfo(SQLParam = SQLParam.pNotSQLParam, ParamName = "PageNumber")]
+        public int? PageNumber { get { return this.handler.ConvertBasePropertyAllowNull(Property("PageNumber")); } set { BaseProperty prop = this.property_list.Find(p => p.identify_name == "PageNumber"); prop.value = value; } }
+
+        [BasePropertyInfo(SQLParam = SQLParam.pNotSQLParam, ParamName = "PageSize")]
+        public int? PageSize { get { return this.handler.ConvertBasePropertyAllowNull(Property("PageSize")); } set { BaseProperty prop = this.property_list.Find(p => p.identify_name == "PageSize"); prop.value = value; } }
+
+        [BasePropertyInfo(SQLParam = SQLParam.pNotSQLParam, ParamName = "OrderBy")]
+        public string OrderBy { get { return this.handler.ConvertBasePropertyAllowNull(Property("OrderBy")); } set { BaseProperty prop = this.property_list.Find(p => p.identify_name == "OrderBy"); prop.value = value; } }
+
+
+        public %ModelName%()
+            : base()
+        {
+
+            this.select_single_proc = "spt%ProcPrefix%%ModelName%_SelectSingle";
+            this.select_list_proc = "spt%ProcPrefix%%ModelName%_SelectList";
+            this.insert_proc = "spt%ProcPrefix%%ModelName%_Insert";
+            this.update_proc = "spt%ProcPrefix%%ModelName%_Update";
+            this.delete_proc = "spt%ProcPrefix%%ModelName%_Delete";
+
+            %AddingOfBaseProperites%
+        }
+
+        public %ModelName%(List<BaseProperty> properties)
+        :this()
+        {
+            this.property_list = properties;
+        }
+
+        public static List<%ModelName%> List(SearchCriteriaList search_items = null)
+        {
+            %ModelName% temp = new %ModelName%();
+            if (search_items != null)
+            {
+                foreach (SearchCriteria single_property in search_items)
+                {
+                    temp.property_list.Find(p => p.identify_name == single_property.name).value = single_property.value;
+                }
+            }
+            return temp.List();
+        }
+
+        private List<%ModelName%> List()
+        {
+            this.basetype = BaseType.baseList;
+
+            List<BaseProperty> parameters = new List<BaseProperty>();
+            List<string> fields = new List<string> { "Search", "PageSize", "PageNumber", "OrderBy" }; //additional parameters for list proc
+            parameters = this.property_list.Where(p => fields.Contains(p.identify_name) || p.sql_parameter == true).ToList();
+
+            return base.Select("", parameters).ConvertAll(b => new %ModelName%(b.property_list));
+        }
+
+        public int Count(SearchCriteriaList search_items = null)
+        {
+            %ModelName% temp = new %ModelName%();
+            if (search_items != null)
+            {
+                foreach (SearchCriteria single_property in search_items)
+                {
+                    temp.property_list.Find(p => p.identify_name == single_property.name).value = single_property.value;
+                }
+            };
+
+            List<BaseProperty> parameters = new List<BaseProperty>();
+            List<string> fields = new List<string> { "Search", "PageSize", "PageNumber", "OrderBy" }; //additional parameters for list proc
+            parameters = temp.property_list.Where(p => fields.Contains(p.identify_name) || p.sql_parameter == true).ToList();
+
+            MSSQLBase countCheck = new MSSQLBase();
+            int count = countCheck.ExecuteScalar("spt%ProcPrefix%%ModelName%_Count", parameters);
+            return count;
+        }
+
+        public %ModelName% Load()
+        {
+           this.basetype = BaseType.baseSingle;
+
+            List<BaseProperty> parameters = new List<BaseProperty>();
+            List<string> fields = new List<string> { this.getIdentifier().identify_name }; //only parameters for single proc
+            parameters = this.property_list.Where(p => fields.Contains(p.identify_name)).ToList();
+
+            List<%ModelName%> ls = base.Select("", parameters).ConvertAll(b => new %ModelName%(b.property_list));
+            return (ls.Count > 0) ? ls[0] : null;
+        }
+
+        public new Dictionary<string, string> Validate()
+        {
+            //throw new Exception(@"[No validation provided for object. Please ensure that it is implemented.]");
+            return new Dictionary<string, string>();
+        }
+
+    }
+}
