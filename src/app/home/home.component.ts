@@ -54,6 +54,7 @@ export class HomeComponent implements OnInit {
     .then( cols=>{ 
         this.selectedColumns = cols.recordset;
         console.log( this.getOurGeneratorFriendlyTableColumns( cols.recordset)); 
+        console.log(  cols.recordset  ); 
 
         this.generateFiles();
     }).catch(err => {
@@ -88,7 +89,7 @@ export class HomeComponent implements OnInit {
           this.selectedDatabaseName,
           this.selectedTableName,
           this.selectedTableName,
-          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ) 
+          this.selectedColumns 
         ); 
     }
  
@@ -205,7 +206,109 @@ export class HomeComponent implements OnInit {
 
                 for (var i = 0; i < columns.length; i++)
                 {
-                    console.log();
+ 
+                    var column_name = columns[i]["COLUMN_NAME"].toString();
+
+                    var field_name = column_name;
+
+                    if ((field_name.Length > 3) && (field_name.substring(0, 3) == "ipk"))
+                    {
+                        field_name = field_name.substring(3) + "_PK";
+                    }
+                    else if ((field_name.Length > 3) && (field_name.substring(0, 3) == "ifk"))
+                    {
+                        field_name = field_name.substring(3) + "_FK";
+                    }
+                    else
+                    {
+                        field_name = field_name.substring(1);
+                    }
+
+                    var data_type = columns[i]["DATA_TYPE"].toString();
+
+                    var is_nullable = columns[i]["IS_NULLABLE"].toString();
+                    var is_PK = columns[i]["IsPartOfPrimaryKey"];
+
+                    var data_precision = columns[i]["CHARACTER_MAXIMUM_LENGTH"]; //.toString();
+                   // ColumnData col_data = new ColumnData(column_name, field_name, data_type, data_precision, is_PK);
+                  //  columns.Add(col_data);
+
+                    var style_type = "text";
+                    var code_data_type = "";
+
+                    switch (data_type)
+                    {
+                        case "int":
+                            data_type = "DataType.dtInteger";
+                            code_data_type = "int";
+                            break;
+                        case "uniqueidentifier":
+                            data_type = "DataType.dtString";
+                            code_data_type = "string";
+                            break;
+                        case "tinyint":
+                            data_type = "DataType.dtInteger";
+                            code_data_type = "int";
+                            break;
+                        case "varchar":
+                            data_type = "DataType.dtString";
+                            code_data_type = "string";
+                            break;
+                        case "datetime":
+                            data_type = "DataType.dtDateTime";
+                            code_data_type = "DateTime";
+                            break;
+                        case "bit":
+                            data_type = "DataType.dtBoolean";
+                            code_data_type = "bool";
+                            break;
+                        case "text":
+                            data_type = "DataType.dtString";
+                            code_data_type = "string";
+                            break;
+                        case "money":
+                            data_type = "DataType.dtMoney";
+                            code_data_type = "decimal";
+                            break;
+                        case "float":
+                            data_type = "DataType.dtFloat";
+                            code_data_type = "float";
+                            break;
+                        default:
+                            data_type = "DataType.dtString";
+                            code_data_type = "string";
+                            break;
+                    }
+
+                    var validation_rules = "";
+                    var required = "Required.rRequired";
+                    var allownull = "ConvertBasePropertyAllowNull";
+                    if (code_data_type != "string")
+                        code_data_type = code_data_type + "?";
+      
+                    var identifier = "Identifier.iNotIdentifier";
+
+                    var attribute = "";
+
+                    if (is_PK == 1)
+                    {
+                        identifier = "Identifier.iIdentifier";
+                        // display = "Display.dDontDisplay";
+                        style_type = "hidden";
+                        code_data_type = code_data_type + "";
+                        attribute = "[BasePropertyInfo(Identifier = " + identifier + ", Required = " + required + ", ParamName = \"" + field_name + "\", FieldName = \"" + column_name + "\")]";
+                    }
+                    else
+                        attribute = "[BasePropertyInfo(ParamName = \"" + field_name + "\", FieldName = \"" + column_name + "\")]";
+
+                    if (validation_rules != "")
+                        attribute = attribute + "\r\t\t[Validation(" + validation_rules + ")]";
+
+                    ListOfBaseProperties = ListOfBaseProperties + "\r\t\t[DataMember(Name = \"" + field_name + "\")]\r\t\t" + attribute + "\r\t\tpublic " + code_data_type + " " + field_name + " { get { return handler." + allownull + "(Property(\"" + field_name + "\")); } set { var prop = this.property_list.Find(p => p.identify_name == \"" + field_name + "\"); prop.value = value; } }\r";
+
+
+                    StyleInfoForProperties = StyleInfoForProperties + "\r\t\t\tthis." + field_name + ".style_info = new BaseStyleProperty(\"\", \"" + style_type + "\", \"\", null);";
+
                 }
 
                 content = content.replace("%ListOfBaseProperties%", ListOfBaseProperties);
