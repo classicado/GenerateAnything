@@ -25,17 +25,31 @@
 		<option *ngFor="let sel_table of availableTables" [value]="sel_table">{{sel_table.TABLE_NAME }}</option>
 	</select> -->
 	<br>
+ 
+	<div class="container">
 
-
-
-	<ul class="heroes" >
-	  <li *ngFor="let hero of tablesList">
-	      {{hero.TABLE_NAME}}
-	  </li>
-	</ul>
-
+		<div class="row">
+			<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+				<ul >
+				  <li *ngFor="let t of tablesList" (click)="selectedTable(t.TABLE_NAME)">
+				      {{t.TABLE_NAME}}
+				  </li>
+				</ul> 
+			</div>
+			<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6"> 
+				<ul >
+				  <li *ngFor="let c of selectedColumns" >
+				      {{c.column_name}}
+				  </li>
+				</ul> 
+			</div>
+		</div>
+	</div>
 
 
 
 
 </div>
+
+
+

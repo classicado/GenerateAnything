@@ -13,6 +13,7 @@ import * as fs from 'fs';
 export class HomeComponent implements OnInit {
 
   tablesList : any[];
+  selectedColumns:any[];
 
   constructor(
     private router: Router,
@@ -100,6 +101,28 @@ export class HomeComponent implements OnInit {
 
   }
 
+   selectedTable(tableName):void{
+
+    this.sql.getTableColumns(tableName)
+    .then( cols=>{
+ 
+     this.selectedColumns = this.getOurGeneratorFriendlyTableColumns( cols.recordset);
+console.log( this.getOurGeneratorFriendlyTableColumns( cols.recordset));
+
+
+    }).catch(err => {
+            console.log( err );
+    });
+    
+   }
+    
+    generateFiles() : void{ 
+        // GenerateProcs(
+        //   config.database,self.CurrentTable.Name,
+        //   "spt_"+self.CurrentTable.Name+"_",
+        //   getOurGeneratorFriendlyTableColumns( self.CurrentTable.Columns ) 
+        // ); 
+    }
 
 
     getOurGeneratorFriendlyTableColumns( tableColumns): any{
@@ -146,6 +169,9 @@ export class HomeComponent implements OnInit {
          
         return columns;
     }
+
+
+ 
      GenerateProcs( dbName: string,tableName: string,  modelName: string,columns: any) : void
         {
             var select_list_1 = "USE " + dbName + "\nGO\n\n"+ 
@@ -488,7 +514,7 @@ export class HomeComponent implements OnInit {
             update_3 = update_3 + "END";
             delete_3 = delete_3 + "END";
  
-            var scriptsFolder = '../scripts/';
+            var scriptsFolder = 'C:/Work/GenerateAnything/Generated/';
             this.createFolder(scriptsFolder);
             this.createFolder(scriptsFolder+ tableName+"/");
             this.writeFile(scriptsFolder + tableName +"/" + modelName + "SelectList.sql",select_list_1 + select_list_2 + select_list_from + select_list_where + select_list_search + select_list_4);
@@ -500,7 +526,7 @@ export class HomeComponent implements OnInit {
         }
          
         createFile():void {
-          this.writeFile("C:\\Work\\GenerateAnything\\test.txt","Hello");
+          this.writeFile("C:\\Work\\GenerateAnything\\Generated\\test.txt","Hello");
         }
         writeFile(filename,content) : void{
             var fs = require('fs');

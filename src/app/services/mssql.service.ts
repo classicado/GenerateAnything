@@ -53,10 +53,39 @@ export class MssqlService {
             }); */
     }
 
-    async getTables(): Promise<any>{
-  
- 		return new mssql.Request().query(queryStringAllTables); 
+    async getTables(): Promise<any>{ 
+ 		return new mssql.Request().query(queryStringAllTables);  
+    }
 
+	async getTableColumns(tableName:string): Promise<any>{ 
+
+		var q = "Select C.COLUMN_NAME" +
+                    ", C.DATA_TYPE" +
+                    ", C.CHARACTER_MAXIMUM_LENGTH " +
+                    ", C.NUMERIC_PRECISION, C.NUMERIC_SCALE " +
+                    ", C.IS_NULLABLE " +
+                    ", Case When ( Z.CONSTRAINT_NAME Is Null AND Z.CONSTRAINT_TYPE = 'PRIMARY KEY') Then 0 Else (Case When ( Z.CONSTRAINT_TYPE = 'PRIMARY KEY') Then 1 Else 0 End) End As IsPartOfPrimaryKey " +
+                    ", Z.* " +
+                    "From INFORMATION_SCHEMA.COLUMNS As C " +
+                    "Outer Apply ( " +
+                    "    Select CCU.CONSTRAINT_NAME " +
+                    "   ,TC.CONSTRAINT_TYPE   " +
+                    "    ,KCU.table_name AS TARGET_TABLE " +
+                    "    ,KCU.column_name AS TARGET_COLUMN " +
+                    "    From INFORMATION_SCHEMA.TABLE_CONSTRAINTS As TC " +
+                    "    JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE As CCU " +
+                    "            On CCU.CONSTRAINT_NAME = TC.CONSTRAINT_NAME   " +
+                    "    LEFT JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS RC " +
+                    "        ON CCU.CONSTRAINT_NAME = RC.CONSTRAINT_NAME " +
+                    "    LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE KCU " +
+                    "        ON KCU.CONSTRAINT_NAME = RC.UNIQUE_CONSTRAINT_NAME   " +
+                    "    Where TC.TABLE_SCHEMA = C.TABLE_SCHEMA " +
+                    "        And TC.TABLE_NAME = C.TABLE_NAME  " +
+                    "        And CCU.COLUMN_NAME = C.COLUMN_NAME  " +
+                    "    ) As Z " +
+                    " Where C.TABLE_NAME = '" + tableName+ "'";
+
+ 		return new mssql.Request().query( q );  
     }
 
 	openConnection(): void{
