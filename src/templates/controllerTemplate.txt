@@ -1,0 +1,81 @@
+﻿using BaseClasses;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using AttributeRouting;
+using AttributeRouting.Web.Http;
+using %NameSpace%.Models;
+using System.Web;
+
+namespace %NameSpace%.Controllers
+{
+    [ErrorLogging]
+    public class %ModelName%Controller : ApiController
+    {
+
+        [GET("%ModelName%")]
+        [TokenValidation]
+        public HttpResponseMessage Get()
+        {
+            SearchCriteriaList properties = new SearchCriteriaList();
+
+            properties.PopulatePropertyValues(Request.GetQueryNameValuePairs(), new %ModelName%().property_list);
+
+            //depending on who is requesting tasks and for what - this list will change
+            List<%ModelName%> theList = new List<%ModelName%>();
+            theList = %ModelName%.List(properties);
+            HttpResponseMessage response = Request.CreateResponse<List<%ModelName%>>(HttpStatusCode.OK, theList);
+            response.Headers.Add("X-Count", Convert.ToString(new %ModelName%().Count(properties)));
+            return response;
+        }
+
+        [GET("%ModelName%/{id}")]
+        [TokenValidation]
+        public %ModelName% Get(int id)
+        {
+            %ModelName% value = new %ModelName%();
+            value.getIdentifier().value= id;
+            value.Load();
+            return value;
+        }
+
+        [POST("%ModelName%")]
+        [TokenValidation]
+        public HttpResponseMessage Post([FromBody]%ModelName% value)
+        {
+            if (value.Validate().Count == 0)
+            {
+                value.Save();
+                return Request.CreateResponse<%ModelName%>(HttpStatusCode.Created, value);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, value.Validate());
+            }
+        }
+
+        [PUT("%ModelName%/{id}")]
+        [TokenValidation]
+        public HttpResponseMessage Put(int id, [FromBody]%ModelName% value)
+        {
+            if (value.Validate().Count == 0)
+            {
+                value.Save();
+                return Request.CreateResponse<%ModelName%>(HttpStatusCode.OK, value);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, value.Validate());
+            }
+        }
+
+        [DELETE("%ModelName%/{id}")]
+        [TokenValidation]
+        public void Delete(int id)
+        {
+        }
+    }
+}

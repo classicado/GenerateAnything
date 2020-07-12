@@ -54,6 +54,8 @@ export class HomeComponent implements OnInit {
     .then( cols=>{ 
         this.selectedColumns = cols.recordset;
         console.log( this.getOurGeneratorFriendlyTableColumns( cols.recordset)); 
+
+        this.generateFiles();
     }).catch(err => {
             console.log( err );
     });
@@ -72,6 +74,13 @@ export class HomeComponent implements OnInit {
           this.selectedDatabaseName,
           this.selectedTableName,
           "spt_"+this.selectedTableName+"_",
+          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ) 
+        ); 
+
+        this.GenerateController(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          this.selectedTableName,
           this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ) 
         ); 
 
@@ -123,6 +132,86 @@ export class HomeComponent implements OnInit {
     }
 
 
+        GenerateController( dbName: string,tableName: string,  modelName: string,columns: any) : void
+        {
+
+            var namespace = "namespace";
+            var storedProcPrefix = "";
+            var content = "";
+
+            var fs = require('fs'); 
+            fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\controllerTemplate.txt", 'utf-8', (err, data) => {
+                if(err){
+                    alert("An error ocurred reading the file :" + err.message);
+                    return;
+                } 
+                content = data.toString();
+                content = content.replace(/%NameSpace%/g, namespace);
+                content = content.replace(/%ModelName%/g, tableName.replace("_", "")); //todo get from form
+                content = content.replace(/%TableName%/g, tableName);
+                content = content.replace(/%ProcPrefix%/g, storedProcPrefix + "_");
+  
+                var scriptsFolder = 'C:/Work/GenerateAnything/Generated/';
+                this.createFolder(scriptsFolder);
+                this.createFolder(scriptsFolder+ tableName+"/"); 
+                this.writeFile(scriptsFolder + tableName +"/controller." + tableName.toLowerCase() + ".cs",content); 
+       
+            }); 
+
+
+
+
+
+            // var block_1 = "class " + tableName + " {\n\n";
+             
+            // var block_2 = "\t"+ tableName +"({\n";
+            // var block_3 = "\t"+ tableName +".fromJson(Map<String, dynamic> json) {\n";
+            // var block_4 = "\tMap<String, dynamic> toJson() {\n";
+            //     block_4 += "\t\tfinal Map<String, dynamic> data = new Map<String, dynamic>();\n";
+            // var block_5 = "\t@override\n\tString toString() {\n\t\treturn \n";
+            // var endLine = "}\n";
+
+            // for (var i = 0; i < columns.length; i++)
+            // {
+            //     columns[i].data_type = columns[i].data_type == "varchar"? "String":columns[i].data_type;
+            //     columns[i].data_type = columns[i].data_type == "bit"? "bool":columns[i].data_type;
+            //     columns[i].data_type = columns[i].data_type == "datetime"? "DateTime":columns[i].data_type;
+            //     columns[i].data_type = columns[i].data_type == "datetime"? "DateTime":columns[i].data_type;
+               
+            //     // Step through the columns if it is not the last column
+            //     if (i != columns.length - 1)
+            //     { 
+            //         block_1 = block_1 + "\t" + columns[i].data_type + " " + columns[i].param_name + ";\n";
+            //         block_2 = block_2 + "\t\tthis." + columns[i].param_name + ",\n";
+            //         block_3 = block_3 + "\t\t" + columns[i].param_name +" = json['"+ columns[i].param_name + "'];\n";
+            //         block_4 = block_4 + "\t\tdata['" + columns[i].param_name +"'] = this."+ columns[i].param_name + ";\n";
+            //         block_5 = block_5 + "\t\t\t\t' ${" + columns[i].param_name +"??''},'\n";
+                
+            //     }
+            //     else // if it is the last column
+            //     {
+            //         block_1 = block_1 + "\t" + columns[i].data_type + " " + columns[i].param_name + ";\n";
+            //         block_2 = block_2 + "\t\tthis." + columns[i].param_name + "\n";
+            //         block_5 = block_5 + "\t\t\t\t' ${" + columns[i].param_name +"??''}}';\n";
+            //         // add the pagination for the list
+            //         // add the column  to the order by statement
+            //         // exclude IPK, IFK and Bit fields from order by criteria
+            //         if (!(columns[i].column_name.indexOf("ipk") >= 0) && !(columns[i].column_name.indexOf("ifk") >= 0) && !columns[i].column_name.startsWith("b"))
+            //         {
+            //             block_4 = block_4 + "\t\tdata['" + columns[i].param_name +"'] = this."+ columns[i].param_name + ";\n";
+            //         } 
+            //     }
+            // }
+
+            // block_1 = block_1 + "\n";  
+            // block_2 = block_2 + "\t});\n\n";  
+            // block_3 = block_3 + "\t}\n\n"; 
+            // block_4 = block_4 + "\t\treturn data;\n\t}\n\n"; 
+            // block_5 = block_5 + "\t}\n"; 
+ 
+           
+       }
+
      GenerateModels( dbName: string,tableName: string,  modelName: string,columns: any) : void
         {
             var block_1 = "class " + tableName + " {\n\n";
@@ -165,7 +254,7 @@ export class HomeComponent implements OnInit {
                     } 
                 }
             }
- 
+
             block_1 = block_1 + "\n";  
             block_2 = block_2 + "\t});\n\n";  
             block_3 = block_3 + "\t}\n\n"; 
