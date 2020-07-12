@@ -125,13 +125,13 @@ export class HomeComponent implements OnInit {
 
      GenerateModels( dbName: string,tableName: string,  modelName: string,columns: any) : void
         {
-            var select_list_1 = "class " + tableName + " {\n\n";
+            var block_1 = "class " + tableName + " {\n\n";
              
-            var select_list_2 = "\t"+ tableName +"({\n";
-            var select_list_3 = "\t"+ tableName +".fromJson(Map<String, dynamic> json) {\n";
-            var select_list_4 = "\tMap<String, dynamic> toJson() {\n";
-                select_list_4 += "\t\tfinal Map<String, dynamic> data = new Map<String, dynamic>();\n";
-            var select_list_5 = "\t@override\n\tString toString() {\n\t\treturn \n";
+            var block_2 = "\t"+ tableName +"({\n";
+            var block_3 = "\t"+ tableName +".fromJson(Map<String, dynamic> json) {\n";
+            var block_4 = "\tMap<String, dynamic> toJson() {\n";
+                block_4 += "\t\tfinal Map<String, dynamic> data = new Map<String, dynamic>();\n";
+            var block_5 = "\t@override\n\tString toString() {\n\t\treturn \n";
             var endLine = "}\n";
 
             for (var i = 0; i < columns.length; i++)
@@ -144,38 +144,38 @@ export class HomeComponent implements OnInit {
                 // Step through the columns if it is not the last column
                 if (i != columns.length - 1)
                 { 
-                    select_list_1 = select_list_1 + "\t" + columns[i].data_type + " " + columns[i].param_name + ";\n";
-                    select_list_2 = select_list_2 + "\t\tthis." + columns[i].param_name + ",\n";
-                    select_list_3 = select_list_3 + "\t\t" + columns[i].param_name +" = json['"+ columns[i].param_name + "'];\n";
-                    select_list_4 = select_list_4 + "\t\tdata['" + columns[i].param_name +"'] = this."+ columns[i].param_name + ";\n";
-                    select_list_5 = select_list_5 + "\t\t\t\t' ${" + columns[i].param_name +"??''},'\n";
+                    block_1 = block_1 + "\t" + columns[i].data_type + " " + columns[i].param_name + ";\n";
+                    block_2 = block_2 + "\t\tthis." + columns[i].param_name + ",\n";
+                    block_3 = block_3 + "\t\t" + columns[i].param_name +" = json['"+ columns[i].param_name + "'];\n";
+                    block_4 = block_4 + "\t\tdata['" + columns[i].param_name +"'] = this."+ columns[i].param_name + ";\n";
+                    block_5 = block_5 + "\t\t\t\t' ${" + columns[i].param_name +"??''},'\n";
                 
                 }
                 else // if it is the last column
                 {
-                    select_list_1 = select_list_1 + "\t" + columns[i].data_type + " " + columns[i].param_name + ";\n";
-                    select_list_2 = select_list_2 + "\t\tthis." + columns[i].param_name + "\n";
-                    select_list_5 = select_list_5 + "\t\t\t\t' ${" + columns[i].param_name +"??''}}';\n";
+                    block_1 = block_1 + "\t" + columns[i].data_type + " " + columns[i].param_name + ";\n";
+                    block_2 = block_2 + "\t\tthis." + columns[i].param_name + "\n";
+                    block_5 = block_5 + "\t\t\t\t' ${" + columns[i].param_name +"??''}}';\n";
                     // add the pagination for the list
                     // add the column  to the order by statement
                     // exclude IPK, IFK and Bit fields from order by criteria
                     if (!(columns[i].column_name.indexOf("ipk") >= 0) && !(columns[i].column_name.indexOf("ifk") >= 0) && !columns[i].column_name.startsWith("b"))
                     {
-                        select_list_4 = select_list_4 + "\t\tdata['" + columns[i].param_name +"'] = this."+ columns[i].param_name + ";\n";
+                        block_4 = block_4 + "\t\tdata['" + columns[i].param_name +"'] = this."+ columns[i].param_name + ";\n";
                     } 
                 }
             }
  
-            select_list_1 = select_list_1 + "\n";  
-            select_list_2 = select_list_2 + "\t});\n\n";  
-            select_list_3 = select_list_3 + "\t}\n\n"; 
-            select_list_4 = select_list_4 + "\t\treturn data;\n\t}\n\n"; 
-            select_list_5 = select_list_5 + "\t}\n"; 
+            block_1 = block_1 + "\n";  
+            block_2 = block_2 + "\t});\n\n";  
+            block_3 = block_3 + "\t}\n\n"; 
+            block_4 = block_4 + "\t\treturn data;\n\t}\n\n"; 
+            block_5 = block_5 + "\t}\n"; 
  
             var scriptsFolder = 'C:/Work/GenerateAnything/Generated/';
             this.createFolder(scriptsFolder);
             this.createFolder(scriptsFolder+ tableName+"/"); 
-            this.writeFile(scriptsFolder + tableName +"/" + tableName.toLowerCase() + "_model_.dart",select_list_1 + select_list_2 + select_list_3 + select_list_4 + select_list_5 + endLine); 
+            this.writeFile(scriptsFolder + tableName +"/" + tableName.toLowerCase() + "_model_.dart",block_1 + block_2 + block_3 + block_4 + block_5 + endLine); 
         }
          
  
