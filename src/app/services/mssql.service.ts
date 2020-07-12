@@ -20,9 +20,11 @@ const queryStringAllTables = "SELECT TABLE_NAME FROM Information_Schema.Tables w
 export class MssqlService {
 
 	connection: any;
-  
+  	config:any;
+
 	constructor() {
-		    
+		this.config = config;    
+
 		mssql.connect(config).then(result => {
 		    console.log("========== Connected ===========");
 		    console.log(result);

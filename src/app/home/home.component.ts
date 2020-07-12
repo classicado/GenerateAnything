@@ -13,6 +13,8 @@ import * as fs from 'fs';
 export class HomeComponent implements OnInit {
 
   tablesList : any[];
+  selectedDatabaseName:string;
+  selectedTableName:string;
   selectedColumns:any[];
 
   constructor(
@@ -77,6 +79,7 @@ export class HomeComponent implements OnInit {
   runSQLQuery(): void{
       console.log("Run in  Home page");
 
+       this.selectedDatabaseName = this.sql.config.database;
       this.sql.query("");
 
       this.sql
@@ -103,11 +106,12 @@ export class HomeComponent implements OnInit {
 
    selectedTable(tableName):void{
 
+    this.selectedTableName = tableName;
     this.sql.getTableColumns(tableName)
     .then( cols=>{
  
-     this.selectedColumns = this.getOurGeneratorFriendlyTableColumns( cols.recordset);
-console.log( this.getOurGeneratorFriendlyTableColumns( cols.recordset));
+        this.selectedColumns = cols.recordset;
+        console.log( this.getOurGeneratorFriendlyTableColumns( cols.recordset));
 
 
     }).catch(err => {
@@ -117,17 +121,18 @@ console.log( this.getOurGeneratorFriendlyTableColumns( cols.recordset));
    }
     
     generateFiles() : void{ 
-        // GenerateProcs(
-        //   config.database,self.CurrentTable.Name,
-        //   "spt_"+self.CurrentTable.Name+"_",
-        //   getOurGeneratorFriendlyTableColumns( self.CurrentTable.Columns ) 
-        // ); 
+        this.GenerateProcs(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          "spt_"+this.selectedTableName+"_",
+          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ) 
+        ); 
     }
 
 
     getOurGeneratorFriendlyTableColumns( tableColumns): any{
         var columns = [];
-
+ 
         tableColumns.forEach(column => {
             var column_name = column["COLUMN_NAME"]; 
             var field_name = column_name;
