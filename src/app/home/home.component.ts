@@ -188,18 +188,20 @@ export class HomeComponent implements OnInit {
         {
             var select_list_1 = "class " + tableName + " {\n\n";
              
-            var select_list_2 = "\t"+ tableName +"(\n";
+            var select_list_2 = "\t"+ tableName +"({\n";
             var select_list_3 = "\t"+ tableName +".fromJson(Map<String, dynamic> json) {\n";
             var select_list_4 = "\tMap<String, dynamic> toJson() {\n";
-            select_list_4 += "\t\tfinal Map<String, dynamic> data = new Map<String, dynamic>();\n";
- 
+                select_list_4 += "\t\tfinal Map<String, dynamic> data = new Map<String, dynamic>();\n";
+            var select_list_5 = "\t@override\n\tString toString() {\n\t\treturn '";
+            var endLine = "}\n";
+
             for (var i = 0; i < columns.length; i++)
             {
-                if (columns[i].data_type == "varchar")
-                {
-                    columns[i].data_type = "String ";
-                }
-
+                columns[i].data_type = columns[i].data_type == "varchar"? "String":columns[i].data_type;
+                columns[i].data_type = columns[i].data_type == "bit"? "bool":columns[i].data_type;
+                columns[i].data_type = columns[i].data_type == "datetime"? "DateTime":columns[i].data_type;
+                columns[i].data_type = columns[i].data_type == "datetime"? "DateTime":columns[i].data_type;
+               
                 // Step through the columns if it is not the last column
                 if (i != columns.length - 1)
                 { 
@@ -207,32 +209,34 @@ export class HomeComponent implements OnInit {
                     select_list_2 = select_list_2 + "\t\tthis." + columns[i].param_name + ",\n";
                     select_list_3 = select_list_3 + "\t\t" + columns[i].param_name +" = json['"+ columns[i].param_name + "'];\n";
                     select_list_4 = select_list_4 + "\t\tdata['" + columns[i].param_name +"'] = this."+ columns[i].param_name + ";\n";
+                    select_list_5 = select_list_5 + " ${" + columns[i].param_name +"??''},";
+                
                 }
                 else // if it is the last column
                 {
-                    select_list_1 = select_list_1 + "\t\t@" + columns[i].param_name + " " + columns[i].data_type + " = NULL,\n";
-                    select_list_2 = select_list_2 + "\t\t" + tableName + "." + columns[i].column_name + "\n";
- 
+                    select_list_1 = select_list_1 + "\t" + columns[i].data_type + " " + columns[i].param_name + ";\n";
+                    select_list_2 = select_list_2 + "\t\tthis." + columns[i].param_name + "\n";
+                    select_list_5 = select_list_5 + " ${" + columns[i].param_name +"??''}}';";
                     // add the pagination for the list
                     // add the column  to the order by statement
                     // exclude IPK, IFK and Bit fields from order by criteria
                     if (!(columns[i].column_name.indexOf("ipk") >= 0) && !(columns[i].column_name.indexOf("ifk") >= 0) && !columns[i].column_name.startsWith("b"))
                     {
                         select_list_4 = select_list_4 + "\t\tdata['" + columns[i].param_name +"'] = this."+ columns[i].param_name + ";\n";
-                    }
-  
+                    } 
                 }
             }
  
-
-            select_list_2 = select_list_2 + "\t});\n";  
-            select_list_3 = select_list_3 + "\t}\n"; 
-            select_list_4 = select_list_4 + "\t\treturn data;\n\t}\n"; 
+            select_list_1 = select_list_1 + "\n";  
+            select_list_2 = select_list_2 + "\t});\n\n";  
+            select_list_3 = select_list_3 + "\t}\n\n"; 
+            select_list_4 = select_list_4 + "\t\treturn data;\n\t}\n\n"; 
+            select_list_5 = select_list_5 + "\n"; 
  
             var scriptsFolder = 'C:/Work/GenerateAnything/Generated/';
             this.createFolder(scriptsFolder);
             this.createFolder(scriptsFolder+ tableName+"/"); 
-            this.writeFile(scriptsFolder + tableName +"/" + modelName + "_model_.dart",select_list_1 + select_list_2 + select_list_3 + select_list_4); 
+            this.writeFile(scriptsFolder + tableName +"/" + modelName + "_model_.dart",select_list_1 + select_list_2 + select_list_3 + select_list_4 + select_list_5 + endLine); 
         }
          
  
