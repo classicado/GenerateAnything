@@ -233,16 +233,16 @@ export class HomeComponent implements OnInit {
             var content = "";
 
             var fs = require('fs'); 
-            fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\middleware\\setting_middleware.dart", 'utf-8', (err, data) => {
+            fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\middleware\\user_detail_middleware.dart", 'utf-8', (err, data) => {
                 if(err){
                     alert("An error ocurred reading the file :" + err.message);
                     return;
                 } 
                 content = data.toString(); 
-                content = content.replace(/Setting/g, tableName);  
-                content = content.replace(/_setting/g, this.camelToUnderscore(tableName));  
-                //content = content.replace(/user_details/g, _.snakeCase(tableName));  
-                content = content.replace(/setting/g, _.camelCase(tableName));  
+                content = content.replace(/UserDetail/g, tableName);  
+                content = content.replace(/_userDetails/g, this.camelToUnderscore(tableName));  
+                content = content.replace(/user_details/g, _.snakeCase(tableName));  
+                content = content.replace(/userDetail/g, _.camelCase(tableName));  
                 content = content.replace(/wcg_driver_app_mobile/g, packageName);  
  
                 this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/middleware/" + _.snakeCase(tableName) + "_middleware.dart",content); 
