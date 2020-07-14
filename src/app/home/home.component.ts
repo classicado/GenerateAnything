@@ -121,6 +121,14 @@ export class HomeComponent implements OnInit {
           this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
           this.flutterAppPackageName
         );
+
+        this.GenerateState(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          this.selectedTableName,
+          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
+          this.flutterAppPackageName
+        );
         //actions
         //middleware
         //models
@@ -264,7 +272,27 @@ export class HomeComponent implements OnInit {
                 this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/middleware/" + _.snakeCase(tableName) + "_middleware.dart",content); 
             });  
        }
+        GenerateState( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
+        { 
+            var namespace = "namespace";
+            var storedProcPrefix = "";
+            var content = "";
 
+            var fs = require('fs'); 
+            fs.readFile("C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\states\\vehicle_route_state.dart", 'utf-8', (err, data) => {
+            //fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\states\\vehicle_route_state.dart", 'utf-8', (err, data) => {
+                if(err){
+                    alert("An error ocurred reading the file :" + err.message);
+                    return;
+                } 
+                content = data.toString(); 
+                content = content.replace(/VehicleRoute/g, tableName);   
+                 content = content.replace(/vehicleRoute/g, _.camelCase(tableName)); 
+                content = content.replace(/wcg_driver_app_mobile/g, packageName);  
+  
+                this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/states/" + _.snakeCase(tableName) + "_state.dart",content); 
+            });  
+       }
 
         
        // Helper functions 
