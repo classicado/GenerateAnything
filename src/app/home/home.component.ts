@@ -113,6 +113,14 @@ export class HomeComponent implements OnInit {
           this.selectedColumns,
           this.flutterAppPackageName
         );
+
+        this.GenerateMiddleware(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          this.selectedTableName,
+          this.selectedColumns,
+          this.flutterAppPackageName
+        );
         //actions
         //middleware
         //models
@@ -218,6 +226,30 @@ export class HomeComponent implements OnInit {
                 this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/reducers/" + _.snakeCase(tableName) + "_reducer.dart",content); 
             });  
        }
+        GenerateMiddleware( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
+        { 
+            var namespace = "namespace";
+            var storedProcPrefix = "";
+            var content = "";
+
+            var fs = require('fs'); 
+            fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\middleware\\setting_middleware.dart", 'utf-8', (err, data) => {
+                if(err){
+                    alert("An error ocurred reading the file :" + err.message);
+                    return;
+                } 
+                content = data.toString(); 
+                content = content.replace(/Setting/g, tableName);  
+                content = content.replace(/_setting/g, this.camelToUnderscore(tableName));  
+                //content = content.replace(/user_details/g, _.snakeCase(tableName));  
+                content = content.replace(/setting/g, _.camelCase(tableName));  
+                content = content.replace(/wcg_driver_app_mobile/g, packageName);  
+ 
+                this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/middleware/" + _.snakeCase(tableName) + "_middleware.dart",content); 
+            });  
+       }
+
+
         
        // Helper functions 
         camelToUnderscore(str): string {
