@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
   selectedDatabaseName:string;
   selectedTableName:string;
   selectedColumns:any[];
+  flutterAppPackageName: string;
 
   constructor(
     private router: Router,
@@ -25,6 +26,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {  
     this.runSQLQuery();  
+
+    this.flutterAppPackageName = "adolftestapp";
   }
  
   connectDB(): void{ 
@@ -91,6 +94,27 @@ export class HomeComponent implements OnInit {
           this.selectedTableName,
           this.selectedColumns 
         ); 
+ 
+        //********************************************************************
+        //FOR THE FLUTTER app-
+        //********************************************************************
+        this.GenerateAction(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          this.selectedTableName,
+          this.selectedColumns,
+          this.flutterAppPackageName
+        );
+
+        //actions
+        //middleware
+        //models
+        //reducers
+        //repositories
+        //states
+        //configurations ***
+
+
     }
  
     getOurGeneratorFriendlyTableColumns( tableColumns): any{
@@ -138,7 +162,49 @@ export class HomeComponent implements OnInit {
         return columns;
     }
 
+        GenerateAction( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
+        { 
+            var namespace = "namespace";
+            var storedProcPrefix = "";
+            var content = "";
 
+            var fs = require('fs'); 
+            fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\actions\\user_details_actions.dart", 'utf-8', (err, data) => {
+                if(err){
+                    alert("An error ocurred reading the file :" + err.message);
+                    return;
+                } 
+                content = data.toString(); 
+                content = content.replace(/UserDetail/g, tableName);  
+                content = content.replace(/_userDetails/g, this.camelToUnderscore(tableName));  
+                content = content.replace(/user_details/g, _.snakeCase(tableName));  
+                content = content.replace(/wcg_driver_app_mobile/g, packageName);  
+
+                this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/actions/" + tableName.toLowerCase() + "_actions.dart",content); 
+            });  
+       }
+
+        
+       // Helper functions 
+        camelToUnderscore(str): string {
+           // var result = str.replace( /([A-Z])/g, " $1" );
+           // return result.split(' ').join('_').toLowerCase();
+           return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+        }
+        toSnakeCase(str): string {
+            return str.split('').map((character) => {
+                if (character == character.toUpperCase()) {
+                    return '_' + character.toLowerCase();
+                } else {
+                    return character;
+                }
+            })
+            .join('');
+        }
+
+
+
+      // const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
         GenerateController( dbName: string,tableName: string,  modelName: string,columns: any) : void
         { 
             var namespace = "namespace";
@@ -737,12 +803,26 @@ export class HomeComponent implements OnInit {
         }
         writeFile(filename,content) : void{
             var fs = require('fs');
-            fs.writeFile(filename,content, function(err) {
-                if(err) {
-                    alert( err);
-                }
-                console.log( "Done writing a file");
-            });        
+            var mkdirp = require('mkdirp');
+            var path = require('path');
+            // fs.writeFile(filename,content, function(err) {
+            //     if(err) {
+            //         alert( err);
+            //     }
+            //     console.log( "Done writing a file");
+            // });   
+
+
+            mkdirp(path.dirname(filename), function (err) {
+                if (err) return alert( err);
+
+                fs.writeFile(filename,content, function(err) {
+                    if(err) {
+                        alert( err);
+                    }
+                    console.log( "Done writing a file");
+                }); 
+            });     
         }  
         createFolder(dir)  : void{
             var fs = require('fs'); 
