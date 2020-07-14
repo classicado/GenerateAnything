@@ -129,6 +129,15 @@ export class HomeComponent implements OnInit {
           this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
           this.flutterAppPackageName
         );
+
+        this.GenerateWebService(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          this.selectedTableName,
+          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
+          this.flutterAppPackageName
+        );
+    
         //actions
         //middleware
         //models
@@ -293,7 +302,44 @@ export class HomeComponent implements OnInit {
                 this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/states/" + _.snakeCase(tableName) + "_state.dart",content); 
             });  
        }
+        GenerateWebService( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
+        { 
+            var namespace = "namespace";
+            var storedProcPrefix = "";
+            var content = "";
 
+            var fs = require('fs'); 
+            fs.readFile("C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\repositories\\webservices\\user_detail_ws.dart", 'utf-8', (err, data) => {
+            //fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\repositories\\webservices\\user_detail_ws.dart", 'utf-8', (err, data) => {
+                if(err){
+                    alert("An error ocurred reading the file :" + err.message);
+                    return;
+                } 
+                content = data.toString(); 
+                content = content.replace(/UserDetail/g, tableName);  
+                content = content.replace(/_userDetails/g, this.camelToUnderscore(tableName));  
+                content = content.replace(/user_details/g, _.snakeCase(tableName));  
+                content = content.replace(/userDetail/g, _.camelCase(tableName));  
+                content = content.replace(/wcg_driver_app_mobile/g, packageName);  
+
+                var block_1 = "";  
+
+                for (var i = 0; i < columns.length; i++)
+                {   
+                    if (i != columns.length - 1) // Step through the columns if it is not the last column
+                    { 
+                        block_1 = block_1 + "\t\t\t\t\"" + columns[i].param_name + ",\n";  
+                    }
+                    else // if it is the last column
+                    {
+                        block_1 = block_1 + "\t\t\t\t\"" + columns[i].param_name + ",\n";  
+                    }
+                }
+ 
+                content = content.replace(/"PkUserDetailId": 0,/g, block_1);
+                this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/repositories/webservices/" + _.snakeCase(tableName) + "_ws.dart",content); 
+            });  
+       }
         
        // Helper functions 
         camelToUnderscore(str): string {
