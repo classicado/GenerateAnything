@@ -106,6 +106,13 @@ export class HomeComponent implements OnInit {
           this.flutterAppPackageName
         );
 
+        this.GenerateReducer(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          this.selectedTableName,
+          this.selectedColumns,
+          this.flutterAppPackageName
+        );
         //actions
         //middleware
         //models
@@ -180,10 +187,37 @@ export class HomeComponent implements OnInit {
                 content = content.replace(/user_details/g, _.snakeCase(tableName));  
                 content = content.replace(/wcg_driver_app_mobile/g, packageName);  
 
-                this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/actions/" + tableName.toLowerCase() + "_actions.dart",content); 
+                this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/actions/" + _.snakeCase(tableName) + "_actions.dart",content); 
             });  
        }
+        GenerateReducer( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
+        { 
+            var namespace = "namespace";
+            var storedProcPrefix = "";
+            var content = "";
 
+            var fs = require('fs'); 
+            fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\reducers\\user_details_reducer.dart", 'utf-8', (err, data) => {
+                if(err){
+                    alert("An error ocurred reading the file :" + err.message);
+                    return;
+                } 
+                content = data.toString(); 
+                content = content.replace(/UserDetail/g, tableName);  
+                content = content.replace(/_userDetails/g, this.camelToUnderscore(tableName));  
+                content = content.replace(/user_details/g, _.snakeCase(tableName));  
+                content = content.replace(/userDetail/g, _.camelCase(tableName));  
+                content = content.replace(/wcg_driver_app_mobile/g, packageName);  
+
+/*
+                console.log( this.camelToUnderscore("AdolfMapadimeng"));
+                console.log( this.toSnakeCase("AdolfMapadimeng"));
+                console.log( this.toLowerCamelCase("AdolfMapadimeng"));
+                console.log( _.camelCase("AdolfMapadimeng"));*/
+
+                this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/reducers/" + _.snakeCase(tableName) + "_reducer.dart",content); 
+            });  
+       }
         
        // Helper functions 
         camelToUnderscore(str): string {
@@ -202,6 +236,9 @@ export class HomeComponent implements OnInit {
             .join('');
         }
 
+        toLowerCamelCase(str): string {
+            return _.snakeCase(str).substring(1);
+        }
 
 
       // const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
