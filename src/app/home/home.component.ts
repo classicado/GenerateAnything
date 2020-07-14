@@ -102,7 +102,7 @@ export class HomeComponent implements OnInit {
           this.selectedDatabaseName,
           this.selectedTableName,
           this.selectedTableName,
-          this.selectedColumns,
+          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
           this.flutterAppPackageName
         );
 
@@ -110,7 +110,7 @@ export class HomeComponent implements OnInit {
           this.selectedDatabaseName,
           this.selectedTableName,
           this.selectedTableName,
-          this.selectedColumns,
+          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
           this.flutterAppPackageName
         );
 
@@ -118,7 +118,7 @@ export class HomeComponent implements OnInit {
           this.selectedDatabaseName,
           this.selectedTableName,
           this.selectedTableName,
-          this.selectedColumns,
+          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
           this.flutterAppPackageName
         );
         //actions
@@ -233,7 +233,8 @@ export class HomeComponent implements OnInit {
             var content = "";
 
             var fs = require('fs'); 
-            fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\middleware\\user_detail_middleware.dart", 'utf-8', (err, data) => {
+            fs.readFile("C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\middleware\\user_detail_middleware.dart", 'utf-8', (err, data) => {
+            //fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\middleware\\user_detail_middleware.dart", 'utf-8', (err, data) => {
                 if(err){
                     alert("An error ocurred reading the file :" + err.message);
                     return;
@@ -244,7 +245,22 @@ export class HomeComponent implements OnInit {
                 content = content.replace(/user_details/g, _.snakeCase(tableName));  
                 content = content.replace(/userDetail/g, _.camelCase(tableName));  
                 content = content.replace(/wcg_driver_app_mobile/g, packageName);  
+
+                var block_1 = "";  
+
+                for (var i = 0; i < columns.length; i++)
+                {   
+                    if (i != columns.length - 1) // Step through the columns if it is not the last column
+                    { 
+                        block_1 = block_1 + "\t\t\t\t\t\taction." + _.camelCase(tableName) + "."+ columns[i].param_name + ",\n";  
+                    }
+                    else // if it is the last column
+                    {
+                        block_1 = block_1 + "\t\t\t\t\t\taction." + _.camelCase(tableName) + "."+ columns[i].param_name + ";\n"; 
+                    }
+                }
  
+                content = content.replace(/store ,/g, block_1);
                 this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/middleware/" + _.snakeCase(tableName) + "_middleware.dart",content); 
             });  
        }
