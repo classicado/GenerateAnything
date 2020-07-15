@@ -142,6 +142,14 @@ export class HomeComponent implements OnInit {
           this.flutterAppPackageName
         );
 
+        this.GenerateStateExport(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          this.selectedTableName,
+          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
+          this.flutterAppPackageName
+        );
+
         this.GenerateWebService(
           this.selectedDatabaseName,
           this.selectedTableName,
@@ -325,6 +333,45 @@ export class HomeComponent implements OnInit {
                 this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/states/" + _.snakeCase(tableName) + "_state.dart",content); 
             });  
        }
+        GenerateStateExport( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
+        { 
+            var namespace = "namespace";
+            var storedProcPrefix = "";
+            var content = "";
+
+            var fs = require('fs'); 
+            const { COPYFILE_EXCL } = fs.constants;
+
+            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp");
+            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend");
+            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states");
+ 
+            fs.copyFile("C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\states\\states.dart", 
+                "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states\\states.dart", 
+                COPYFILE_EXCL,(err)=>{
+ 
+                if(err){
+                   console.log("An error ocurred reading the file :" + err.message); 
+                } 
+
+                fs.readFile("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states\\states.dart", 'utf-8', (err, data) => {
+                 
+                    if(err){
+                        alert("An error ocurred reading the file :" + err.message);
+                        return;
+                    } 
+                    content = data.toString();  
+                    var newLine = "export '"+_.snakeCase(tableName)+"_state.dart';";
+
+                    if(! content.includes(newLine)){
+                        content = content.replace("export 'app_state.dart'; ", "export 'app_state.dart'; \n"+ newLine);
+                    }
+                      
+                    this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/states/states.dart",content); 
+                });  
+            }); 
+       }
+
         GenerateWebService( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
         { 
             var namespace = "namespace";
