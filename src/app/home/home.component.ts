@@ -165,6 +165,15 @@ export class HomeComponent implements OnInit {
           this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
           this.flutterAppPackageName
         );
+
+        this.GenerateWebServiceExport(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          this.selectedTableName,
+          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
+          this.flutterAppPackageName
+        );
+       
     
         this.GenerateConfiguration(
           this.selectedDatabaseName,
@@ -429,7 +438,8 @@ export class HomeComponent implements OnInit {
                     if(! content.includes(line_5)){
                         content = content.replace("fetchingData: fetchingData ?? this.fetchingData,", "fetchingData: fetchingData ?? this.fetchingData,\n"+ line_5);
                     }
-                      
+                    
+                    content = content.replace(/wcg_driver_app_mobile/g, packageName);
                     this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/states/app_state.dart",content); 
                 });  
             }); 
@@ -476,6 +486,45 @@ export class HomeComponent implements OnInit {
                 this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/repositories/webservices/" + _.snakeCase(tableName) + "_ws.dart",content); 
             });  
        }
+
+        GenerateWebServiceExport( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
+        { 
+            var namespace = "namespace";
+            var storedProcPrefix = "";
+            var content = "";
+            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\repositories\\webservices\\webservices.dart";
+            var fileToWrite = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\repositories\\webservices\\webservices.dart";
+
+            var fs = require('fs'); 
+            const { COPYFILE_EXCL } = fs.constants;
+ 
+            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\repositories\\webservices");
+ 
+            fs.copyFile(fileToCopy,  fileToWrite, COPYFILE_EXCL,(err)=>{
+ 
+                if(err){
+                   console.log("An error ocurred copying the file :" + err.message); 
+                } 
+
+                fs.readFile(fileToWrite, 'utf-8', (err, data) => {
+                 
+                    if(err){
+                        alert("An error ocurred reading the file :" + err.message);
+                        return;
+                    } 
+                    content = data.toString();  
+                    var newLine = "export '"+_.snakeCase(tableName)+"_ws.dart';";
+
+                    if(! content.includes(newLine)){
+                        content = content.replace("export 'base.dart';", "export 'base.dart';\n"+ newLine);
+                    }
+                    
+                    content = content.replace(/wcg_driver_app_mobile/g, packageName);
+                    this.writeFile(fileToWrite,content); 
+                });  
+            }); 
+       }
+
         
         GenerateConfiguration( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string , flutterAppName : string, flutterAppAPIurl :string) : void
         { 
@@ -1230,7 +1279,7 @@ export class HomeComponent implements OnInit {
             var fs = require('fs'); 
 
             if (!fs.existsSync(dir)){
-                fs.mkdirSync(dir);
+                fs.mkdirSync(dir, { recursive: true });
             }         
         }  
 
