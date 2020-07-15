@@ -117,6 +117,13 @@ export class HomeComponent implements OnInit {
           this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
           this.flutterAppPackageName
         );
+        this.GenerateAppReducer(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          this.selectedTableName,
+          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
+          this.flutterAppPackageName
+        );
 
         this.GenerateMiddleware(
           this.selectedDatabaseName,
@@ -181,7 +188,7 @@ export class HomeComponent implements OnInit {
           this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
           this.flutterAppPackageName
         );    
-    
+
         this.GenerateConfiguration(
           this.selectedDatabaseName,
           this.selectedTableName,
@@ -298,6 +305,55 @@ export class HomeComponent implements OnInit {
                 this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/reducers/" + _.snakeCase(tableName) + "_reducer.dart",content); 
             });  
        }
+
+        GenerateAppReducer( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
+        {  
+            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\reducers\\app_reducer.dart";
+            var fileToWrite = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\reducers\\app_reducer.dart";
+ 
+            var fs = require('fs'); 
+            const { COPYFILE_EXCL } = fs.constants;
+  
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
+ 
+            fs.copyFile(fileToCopy,fileToWrite, COPYFILE_EXCL,(err)=>{ //copy the file from base project, ignore if already exists
+ 
+                if(err){
+                   console.log("An error ocurred copying the file :" + err.message); 
+                } 
+
+                fs.readFile(fileToWrite, 'utf-8', (err, content) => {
+                 
+                    if(err){
+                        alert("An error ocurred reading the file :" + err.message);
+                        return;
+                    }  
+
+                    var strToReplace = "";
+                    var line_1 = "import '"+_.snakeCase(tableName)+".dart';";
+                    var line_2 = "\t\t"+_.camelCase(tableName)+"State: "+_.camelCase(tableName)+"Reducer(state."+_.camelCase(tableName)+"State, action),"; 
+
+                    if(! content.includes(line_1)){
+                        strToReplace = "import '../states/states.dart';";
+                        content = content.replace(strToReplace, strToReplace+"\n"+ line_1);
+                    }
+                    if(! content.includes(line_2)){
+                        strToReplace = "fetchingData: fetchingDataReducer(state.fetchingData, action),";
+                        content = content.replace(strToReplace, strToReplace+"\n"+ line_2);
+                    } 
+                    
+                    content = content.replace(/wcg_driver_app_mobile/g, packageName);
+                    this.writeFile(fileToWrite,content); 
+                });  
+            }); 
+       }
+
+
+
+
+
+
         GenerateMiddleware( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
         { 
             var namespace = "namespace";
@@ -533,32 +589,28 @@ export class HomeComponent implements OnInit {
        }
 
         GenerateAppRepository( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
-        { 
-            var namespace = "namespace";
-            var storedProcPrefix = "";
-            var content = "";
+        {  
             var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\repositories\\app_repository.dart";
             var fileToWrite = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\repositories\\app_repository.dart";
-
-
+ 
             var fs = require('fs'); 
             const { COPYFILE_EXCL } = fs.constants;
+  
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
  
-            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\repositories");
- 
-            fs.copyFile(fileToCopy,fileToWrite, COPYFILE_EXCL,(err)=>{
+            fs.copyFile(fileToCopy,fileToWrite, COPYFILE_EXCL,(err)=>{ //copy the file from base project, ignore if already exists
  
                 if(err){
                    console.log("An error ocurred copying the file :" + err.message); 
                 } 
 
-                fs.readFile(fileToWrite, 'utf-8', (err, data) => {
+                fs.readFile(fileToWrite, 'utf-8', (err, content) => {
                  
                     if(err){
                         alert("An error ocurred reading the file :" + err.message);
                         return;
-                    } 
-                    content = data.toString();  
+                    }  
 
                     var strToReplace = "";
                     var line_1 = "\tfinal "+tableName+"WebService "+_.camelCase(tableName)+"WebService;";
@@ -1303,8 +1355,8 @@ export class HomeComponent implements OnInit {
             update_3 = update_3 + "END";
             delete_3 = delete_3 + "END";
  
-            var scriptsFolder = 'C:/Work/GenerateAnything/Generated/';
-            this.createFolder(scriptsFolder);
+            var scriptsFolder = 'C:/Work/GenerateAnything/Generated/database/';
+          
             this.createFolder(scriptsFolder+ tableName+"/");
             this.writeFile(scriptsFolder + tableName +"/" + modelName + "SelectList.sql",select_list_1 + select_list_2 + select_list_from + select_list_where + select_list_search + select_list_4);
             this.writeFile(scriptsFolder + tableName +"/" + modelName + "Count.sql",select_count_1 + select_count_2 + select_count_3);
@@ -1321,14 +1373,7 @@ export class HomeComponent implements OnInit {
             var fs = require('fs');
             var mkdirp = require('mkdirp');
             var path = require('path');
-            // fs.writeFile(filename,content, function(err) {
-            //     if(err) {
-            //         alert( err);
-            //     }
-            //     console.log( "Done writing a file");
-            // });   
-
-
+   
             mkdirp(path.dirname(filename), function (err) {
                 if (err) return alert( err);
 
