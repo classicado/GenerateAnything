@@ -125,6 +125,14 @@ export class HomeComponent implements OnInit {
           this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
           this.flutterAppPackageName
         );
+ 
+        this.GenerateModel(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          this.selectedTableName,
+          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
+          this.flutterAppPackageName
+        );
 
         this.GenerateState(
           this.selectedDatabaseName,
@@ -151,6 +159,8 @@ export class HomeComponent implements OnInit {
           this.flutterAppName,
           this.flutterAppAPIurl,
         );
+
+
         //actions
         //middleware
         //models
@@ -393,7 +403,68 @@ export class HomeComponent implements OnInit {
             }); 
        }
 
+       GenerateModel( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
+        { 
+            var namespace = "namespace";
+            var storedProcPrefix = "";
+            var content = "";
 
+            var fs = require('fs'); 
+          //  fs.readFile("C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\models\\user_details_model.dart", 'utf-8', (err, data) => {
+            fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\models\\template_model.dart", 'utf-8', (err, data) => {
+                if(err){
+                    alert("An error ocurred reading the file :" + err.message);
+                    return;
+                } 
+                content = data.toString(); 
+                content = content.replace(/UserDetail/g, tableName);   
+                content = content.replace(/wcg_driver_app_mobile/g, packageName);  
+ 
+                var block_1 = "";
+                var block_2 = "";
+                var block_3 = "";
+                var block_4 = "";
+                var block_5 = "";
+
+
+                for (var i = 0; i < columns.length; i++)
+                {   
+                    columns[i].data_type = columns[i].data_type == "varchar"? "String":columns[i].data_type;
+                    columns[i].data_type = columns[i].data_type == "bit"? "bool":columns[i].data_type;
+                    columns[i].data_type = columns[i].data_type == "datetime"? "DateTime":columns[i].data_type;
+                    columns[i].data_type = columns[i].data_type == "datetime"? "DateTime":columns[i].data_type;
+
+                    if (i != columns.length - 1) // Step through the columns if it is not the last column
+                    {  
+                        block_1 = block_1 + "\t" + columns[i].data_type + " " + columns[i].param_name + ";\n";
+                        block_2 = block_2 + "\t\tthis." + columns[i].param_name + ",\n";
+                        block_3 = block_3 + "\t\t" + columns[i].param_name +" = json['"+ columns[i].param_name + "'];\n";
+                        block_4 = block_4 + "\t\tdata['" + columns[i].param_name +"'] = this."+ columns[i].param_name + ";\n";
+                        block_5 = block_5 + "\t\t\t\t' ${" + columns[i].param_name +"??''},'\n";
+                    }
+                    else // if it is the last column
+                    { 
+                        block_1 = block_1 + "\t" + columns[i].data_type + " " + columns[i].param_name + ";\n";
+                        block_2 = block_2 + "\t\tthis." + columns[i].param_name + "\n";
+                        block_3 = block_3 + "\t\t" + columns[i].param_name +" = json['"+ columns[i].param_name + "'];\n";
+                         
+                        if (!(columns[i].column_name.indexOf("ipk") >= 0) && !(columns[i].column_name.indexOf("ifk") >= 0) && !columns[i].column_name.startsWith("b"))
+                        {
+                            block_4 = block_4 + "\t\tdata['" + columns[i].param_name +"'] = this."+ columns[i].param_name + ";\n";
+                        } 
+
+                        block_5 = block_5 + "\t\t\t\t' ${" + columns[i].param_name +"??''}}';\n";
+                    }
+                }
+ 
+                content = content.replace(/block_1/g, block_1);
+                content = content.replace(/block_2/g, block_2);
+                content = content.replace(/block_3/g, block_3);
+                content = content.replace(/block_4/g, block_4);
+                content = content.replace(/block_5/g, block_5);
+                this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/models/" + _.snakeCase(tableName) + "_model.dart",content); 
+            });  
+       }
 
 
 
