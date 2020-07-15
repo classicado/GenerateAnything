@@ -110,6 +110,14 @@ export class HomeComponent implements OnInit {
           this.flutterAppPackageName
         );
 
+        this.GenerateActionExport(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          this.selectedTableName,
+          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
+          this.flutterAppPackageName
+        );
+
         this.GenerateReducer(
           this.selectedDatabaseName,
           this.selectedTableName,
@@ -285,6 +293,44 @@ export class HomeComponent implements OnInit {
                 this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/actions/" + _.snakeCase(tableName) + "_actions.dart",content); 
             });  
        }
+
+        GenerateActionExport( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
+        {  
+            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\actions\\actions.dart";
+            var fileToWrite = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\actions\\actions.dart";
+ 
+            var fs = require('fs'); 
+            const { COPYFILE_EXCL } = fs.constants;
+  
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created 
+ 
+            fs.copyFile(fileToCopy,fileToWrite, COPYFILE_EXCL,(err)=>{ //copy the file from base project, ignore if already exists
+ 
+                if(err){
+                   console.log("An error ocurred copying the file :" + err.message); 
+                } 
+
+                fs.readFile(fileToWrite, 'utf-8', (err, content) => {
+                 
+                    if(err){
+                        alert("An error ocurred reading the file :" + err.message);
+                        return;
+                    } 
+  
+                    var line_1 = "export '"+_.snakeCase(tableName)+"_actions.dart';"; 
+
+                    if(! content.includes(line_1)){ 
+                        content = content +"\n"+ line_1;
+                    } 
+                    
+                    content = content.replace(/wcg_driver_app_mobile/g, packageName); 
+                    this.writeFile(fileToWrite,content); 
+                });  
+            }); 
+       }
+
+
         GenerateReducer( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
         { 
             var namespace = "namespace";
@@ -778,7 +824,7 @@ export class HomeComponent implements OnInit {
                     } 
  
                     var strToReplace = "";
-                    var line_1 = "export '"+_.camelCase(tableName)+".dart';"; 
+                    var line_1 = "export '"+_.snakeCase(tableName)+"_model.dart';"; 
 
                     if(! content.includes(line_1)){
                         strToReplace = "export 'error_message_model.dart';";
