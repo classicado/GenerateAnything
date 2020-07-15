@@ -147,7 +147,9 @@ export class HomeComponent implements OnInit {
           this.selectedTableName,
           this.selectedTableName,
           this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
-          this.flutterAppPackageName
+          this.flutterAppPackageName,
+          this.flutterAppName,
+          this.flutterAppAPIurl,
         );
         //actions
         //middleware
@@ -352,7 +354,7 @@ export class HomeComponent implements OnInit {
             });  
        }
         
-        GenerateConfiguration( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
+        GenerateConfiguration( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string , flutterAppName : string, flutterAppAPIurl :string) : void
         { 
             var namespace = "namespace";
             var storedProcPrefix = "";
@@ -377,8 +379,8 @@ export class HomeComponent implements OnInit {
                     } 
                     content = data.toString(); 
                     content = content.replace(/wcg_driver_app_mobile/g, packageName); 
-                    content = content.replace(/WCG-Driver-App/g, this.flutterAppName); 
-                    content = content.replace('http://ec2-34-243-218-71.eu-west-1.compute.amazonaws.com/api/', this.flutterAppAPIurl); 
+                    content = content.replace(/WCG-Driver-App/g, flutterAppName); 
+                    content = content.replace('http://ec2-34-243-218-71.eu-west-1.compute.amazonaws.com/api/', flutterAppAPIurl); 
  
                     var newLine = _.camelCase(tableName)+": const "+ tableName +"(),";
 
