@@ -138,6 +138,13 @@ export class HomeComponent implements OnInit {
           this.flutterAppPackageName
         );
     
+        this.GenerateConfiguration(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          this.selectedTableName,
+          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
+          this.flutterAppPackageName
+        );
         //actions
         //middleware
         //models
@@ -341,6 +348,50 @@ export class HomeComponent implements OnInit {
             });  
        }
         
+        GenerateConfiguration( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
+        { 
+            var namespace = "namespace";
+            var storedProcPrefix = "";
+            var content = "";
+
+            var fs = require('fs'); 
+            const { COPYFILE_EXCL } = fs.constants;
+
+            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp");
+            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\configuration");
+
+
+            fs.copyFile("C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\configurations\\configuration.dart", 
+                "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\configuration\\configuration.dart", 
+                COPYFILE_EXCL,(err)=>{
+ 
+                fs.readFile("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\configuration\\configuration.dart", 'utf-8', (err, data) => {
+                 
+                    if(err){
+                        alert("An error ocurred reading the file :" + err.message);
+                        return;
+                    } 
+                    content = data.toString(); 
+                    content = content.replace(/wcg_driver_app_mobile/g, packageName); 
+ 
+                    var newLine = _.camelCase(tableName)+": const "+ tableName +"(),";
+
+                    if(! content.includes(newLine)){
+                        content = content.replace(');//AppRepository',"\t"+ newLine + "\n\t\t);//AppRepository");
+                    }
+                      
+                    this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/configuration/configuration.dart",content); 
+                });  
+            }); 
+       }
+
+
+
+
+
+
+
+
        // Helper functions 
         camelToUnderscore(str): string {
            // var result = str.replace( /([A-Z])/g, " $1" );
