@@ -17,6 +17,8 @@ export class HomeComponent implements OnInit {
   selectedTableName:string;
   selectedColumns:any[];
   flutterAppPackageName: string;
+  flutterAppName: string;
+  flutterAppAPIurl: string;
 
   constructor(
     private router: Router,
@@ -28,6 +30,8 @@ export class HomeComponent implements OnInit {
     this.runSQLQuery();  
 
     this.flutterAppPackageName = "adolftestapp";
+    this.flutterAppName = "AdolfAppName-App";
+    this.flutterAppAPIurl = "http://ec2-34-243-218-71.eu-west-1.compute.amazonaws.com/api/";
   }
  
   connectDB(): void{ 
@@ -373,6 +377,8 @@ export class HomeComponent implements OnInit {
                     } 
                     content = data.toString(); 
                     content = content.replace(/wcg_driver_app_mobile/g, packageName); 
+                    content = content.replace(/WCG-Driver-App/g, this.flutterAppName); 
+                    content = content.replace('http://ec2-34-243-218-71.eu-west-1.compute.amazonaws.com/api/', this.flutterAppAPIurl); 
  
                     var newLine = _.camelCase(tableName)+": const "+ tableName +"(),";
 
