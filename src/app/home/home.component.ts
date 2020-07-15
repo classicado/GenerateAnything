@@ -150,6 +150,14 @@ export class HomeComponent implements OnInit {
           this.flutterAppPackageName
         );
 
+        this.GenerateAppState(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          this.selectedTableName,
+          this.getOurGeneratorFriendlyTableColumns( this.selectedColumns ),
+          this.flutterAppPackageName
+        );
+
         this.GenerateWebService(
           this.selectedDatabaseName,
           this.selectedTableName,
@@ -371,6 +379,64 @@ export class HomeComponent implements OnInit {
                 });  
             }); 
        }
+       GenerateAppState( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
+        { 
+            var namespace = "namespace";
+            var storedProcPrefix = "";
+            var content = "";
+
+            var fs = require('fs'); 
+            const { COPYFILE_EXCL } = fs.constants;
+
+            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp");
+            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend");
+            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states");
+ 
+            fs.copyFile("C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\states\\app_state.dart", 
+                "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states\\app_state.dart", 
+                COPYFILE_EXCL,(err)=>{
+ 
+                if(err){
+                   console.log("An error ocurred reading the file :" + err.message); 
+                } 
+
+                fs.readFile("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states\\app_state.dart", 'utf-8', (err, data) => {
+                 
+                    if(err){
+                        alert("An error ocurred reading the file :" + err.message);
+                        return;
+                    } 
+                    content = data.toString();  
+
+                    var line_1 = "\tfinal "+tableName+"State "+_.camelCase(tableName)+"State;";
+                    var line_2 = "\t\t\tthis."+_.camelCase(tableName)+"State,";
+                    var line_3 = "\t\t\t"+_.camelCase(tableName)+"State: "+ tableName+"State(current"+ tableName +" : null),";
+                    var line_4 = "\t\t\t"+tableName+"State "+_.camelCase(tableName)+"State,";
+                    var line_5 = "\t\t\t"+_.camelCase(tableName)+"State: "+_.camelCase(tableName)+"State ?? "+_.camelCase(tableName)+"State,";
+
+                    if(! content.includes(line_1)){
+                        content = content.replace("final bool fetchingData;", "final bool fetchingData;\n"+ line_1);
+                    }
+                    if(! content.includes(line_2)){
+                        content = content.replace("@required this.fetchingData,", "@required this.fetchingData,\n"+ line_2);
+                    }
+                    if(! content.includes(line_3)){
+                        content = content.replace("fetchingData: false,", "fetchingData: false,\n"+ line_3);
+                    }
+                    if(! content.includes(line_4)){
+                        content = content.replace("bool fetchingData,", "bool fetchingData,\n"+ line_4);
+                    }
+                    if(! content.includes(line_5)){
+                        content = content.replace("fetchingData: fetchingData ?? this.fetchingData,", "fetchingData: fetchingData ?? this.fetchingData,\n"+ line_5);
+                    }
+                      
+                    this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/states/app_state.dart",content); 
+                });  
+            }); 
+       }
+
+
+
 
         GenerateWebService( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
         { 
