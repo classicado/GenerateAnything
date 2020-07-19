@@ -931,11 +931,16 @@ export class HomeComponent implements OnInit {
 
 
                     var strToReplace = "";
-                    var line_1 = '<Compile Include="Controllers\\"'+tableName+'"\\controller."'+tableName+'".cs" />';
+                    var line_1 = '<Compile Include="Controllers\\'+tableName+'\\controller.'+tableName+'.cs" />';
+                    var line_2 = '<Compile Include="Models\\'+tableName+'\\model.'+tableName+'.cs" />';
                      
                     if(! content.includes(line_1)){
                         strToReplace = '<Compile Include="Global.asax.cs">';
                         content = content.replace(strToReplace, line_1 + "\n\t"+ strToReplace);
+                    } 
+                    if(! content.includes(line_2)){
+                        strToReplace = '<Compile Include="Global.asax.cs">';
+                        content = content.replace(strToReplace, line_2 + "\n\t"+ strToReplace);
                     }     
                     this.writeFile(fileToWrite,content); 
                 });  
