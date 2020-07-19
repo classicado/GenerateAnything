@@ -99,6 +99,14 @@ export class HomeComponent implements OnInit {
           this.selectedColumns 
         ); 
  
+        this.GenerateAPIprojectFile(
+          this.selectedDatabaseName,
+          this.selectedTableName,
+          this.selectedTableName,
+          this.selectedColumns 
+        ); 
+
+
         //********************************************************************
         //FOR THE FLUTTER app-
         //********************************************************************
@@ -869,6 +877,10 @@ export class HomeComponent implements OnInit {
             var namespace = "namespace";
             var storedProcPrefix = "";
             var content = "";
+            var fileToWrite = "C:\\Work\\BaseAPI\\API\\Source\\Dev\\API\\XbaseAPI\\Controllers\\"+tableName+"\\controller."+tableName+".cs";
+           
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
 
             var fs = require('fs'); 
             fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\controllerTemplate.txt", 'utf-8', (err, data) => {
@@ -885,15 +897,61 @@ export class HomeComponent implements OnInit {
                 var scriptsFolder = 'C:/Work/GenerateAnything/Generated/';
                 this.createFolder(scriptsFolder);
                 this.createFolder(scriptsFolder+ tableName+"/"); 
-                this.writeFile(scriptsFolder + tableName +"/controller." + tableName.toLowerCase() + ".cs",content); 
+               
+
+                //Writing to the old folder.
+                this.writeFile(scriptsFolder + tableName +"/controller." + tableName.toLowerCase() + ".cs",content);  
+                this.writeFile(fileToWrite,content); 
             });  
        }
+
+        GenerateAPIprojectFile( dbName: string,tableName: string,  modelName: string,columns: any) : void
+        {  
+            var fileToCopy = "C:\\Work\\BaseAPI\\API\\Source\\Dev\\API\\XbaseAPI\\XbaseAPI.csproj";
+            var fileToWrite = "C:\\Work\\BaseAPI\\API\\Source\\Dev\\API\\XbaseAPI\\XbaseAPI.csproj";
+ 
+            var fs = require('fs'); 
+            const { COPYFILE_EXCL } = fs.constants;
+  
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created 
+ 
+            fs.copyFile(fileToCopy,fileToWrite, COPYFILE_EXCL,(err)=>{ //copy the file from base project, ignore if already exists
+ 
+                if(err){
+                   console.log("An error ocurred copying the file :" + err.message); 
+                } 
+
+                fs.readFile(fileToWrite, 'utf-8', (err, content) => {
+                 
+                    if(err){
+                        alert("An error ocurred reading the file :" + err.message);
+                        return;
+                    } 
+
+
+                    var strToReplace = "";
+                    var line_1 = '<Compile Include="Controllers\\"'+tableName+'"\\controller."'+tableName+'".cs" />';
+                     
+                    if(! content.includes(line_1)){
+                        strToReplace = '<Compile Include="Global.asax.cs">';
+                        content = content.replace(strToReplace, line_1 + "\n\t"+ strToReplace);
+                    }     
+                    this.writeFile(fileToWrite,content); 
+                });  
+            }); 
+       }
+
         GenerateAPIModel( dbName: string,tableName: string,  modelName: string,columns: any) : void
         { 
             var namespace = "namespace";
             var storedProcPrefix = "";
             var procPrefix = "";
-            var content = "";
+            var content = ""; 
+            var fileToWrite = "C:\\Work\\BaseAPI\\API\\Source\\Dev\\API\\XbaseAPI\\Models\\"+tableName+"\\model."+tableName+".cs";
+
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
 
             var fs = require('fs'); 
             fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\modelTemplate.txt", 'utf-8', (err, data) => {
@@ -1044,8 +1102,11 @@ export class HomeComponent implements OnInit {
                 this.createFolder(scriptsFolder);
                 this.createFolder(scriptsFolder+ tableName+"/"); 
                 this.writeFile(scriptsFolder + tableName +"/model." + tableName.toLowerCase() + ".cs",content); 
+                this.writeFile(fileToWrite,content); 
             });  
        }
+
+
 
      GenerateModels( dbName: string,tableName: string,  modelName: string,columns: any) : void
         {
