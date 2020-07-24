@@ -11,20 +11,39 @@
 
 
 <div>
-	 <mat-slider min="1" max="100" step="1" value="1"></mat-slider>
-	 <br>
-	<button mat-raised-button  (click)="connectDB()">Connect DB </button>	 
- 	<button mat-raised-button  (click)="runSQLQuery()">Get Tables </button>	 
- 	<button mat-raised-button  (click)="generateFiles()">Generate Files </button>	 
- <!--
+	<mat-slider min="1" max="100" step="1" value="1"></mat-slider>
 	<br>
-	<label>Select a Table</label>
+		<button mat-raised-button  (click)="connectDB()">Connect DB </button>	 
+	 	<button mat-raised-button  (click)="runSQLQuery()">Get Tables </button>	 
+	 	<button mat-raised-button  (click)="generateFiles()">Generate Files </button>	 
 	<br>
- 	<select [(ngModel)]="selectedTable" (change)="tableChanged()">
-		<option *ngFor="let sel_table of availableTables" [value]="sel_table">{{sel_table.TABLE_NAME }}</option>
-	</select> -->
+  
+	<mat-form-field class="example-form-field">
+	  <mat-label>Clearable input</mat-label>
+	  <input matInput type="text" [(ngModel)]="projectBaseFlutterApp">
+	  <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+	    <mat-icon>close</mat-icon>
+	  </button>
+	</mat-form-field>
+	<br>
+	<mat-form-field class="example-form-field">
+	  <mat-label>Clearable input</mat-label>
+	  <input matInput type="text" [(ngModel)]="projectGeneratedFlutterApp">
+	  <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+	    <mat-icon>close</mat-icon>
+	  </button>
+	</mat-form-field>
+
+
 	<br>
  
+	<mat-selection-list #shoes>
+	  <mat-list-option *ngFor="let t of tablesList" (click)="selectedTable(t.TABLE_NAME)">
+	    {{t.TABLE_NAME}}
+	  </mat-list-option>
+	</mat-selection-list>
+ 
+<!-- 
 	<div class="container">
 
 		<div class="row">
@@ -34,21 +53,9 @@
 				      {{t.TABLE_NAME}}
 				  </li>
 				</ul> 
-			</div>
-			<!-- <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6"> 
-				<ul >
-				  <li *ngFor="let c of selectedColumns" >
-				      {{c.column_name}}
-				  </li>
-				</ul> 
-			</div> -->
+			</div> 
 		</div>
-	</div>
-
-
-
-
+	</div> -->
+ 
 </div>
-
-
-
+ 

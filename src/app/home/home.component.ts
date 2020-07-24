@@ -20,6 +20,11 @@ export class HomeComponent implements OnInit {
   flutterAppName: string;
   flutterAppAPIurl: string;
 
+  projectBaseFlutterApp : string;
+  projectGeneratedFlutterApp : string;
+  projectAPI: string;
+  projectSQL: string;
+
   constructor(
     private router: Router,
     public sql : MssqlService
@@ -32,6 +37,11 @@ export class HomeComponent implements OnInit {
     this.flutterAppPackageName = "adolftestapp";
     this.flutterAppName = "AdolfAppName-App";
     this.flutterAppAPIurl = "http://ec2-34-243-218-71.eu-west-1.compute.amazonaws.com/api/";
+
+    this.projectBaseFlutterApp = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\"; 
+    this.projectGeneratedFlutterApp = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\";
+    this.projectAPI = "";
+    this.projectSQL = "";    
   }
  
   connectDB(): void{ 
@@ -287,7 +297,7 @@ export class HomeComponent implements OnInit {
             var content = "";
  
             var fileToCopy = "C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\actions\\user_details_actions.dart";
-            var fileToWrite = "C:/Work/GenerateAnything/Generated/flutterapp/backend/actions/" + _.snakeCase(tableName) + "_actions.dart";
+            var fileToWrite = this.projectGeneratedFlutterApp + "/backend/actions/" + _.snakeCase(tableName) + "_actions.dart";
  
             var fs = require('fs'); 
             const { COPYFILE_EXCL } = fs.constants;
@@ -313,8 +323,8 @@ export class HomeComponent implements OnInit {
 
         GenerateActionExport( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
         {  
-            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\actions\\actions.dart";
-            var fileToWrite = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\actions\\actions.dart";
+            var fileToCopy = this.projectBaseFlutterApp + "lib\\app\\backend\\actions\\actions.dart";
+            var fileToWrite = this.projectGeneratedFlutterApp + "backend\\actions\\actions.dart";
  
             var fs = require('fs'); 
             const { COPYFILE_EXCL } = fs.constants;
@@ -355,7 +365,7 @@ export class HomeComponent implements OnInit {
             var content = "";
 
             var fileToCopy = "C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\reducers\\user_details_reducer.dart";
-            var fileToWrite = "C:/Work/GenerateAnything/Generated/flutterapp/backend/reducers/" + _.snakeCase(tableName) + "_reducer.dart";
+            var fileToWrite = this.projectGeneratedFlutterApp + "/backend/reducers/" + _.snakeCase(tableName) + "_reducer.dart";
   
             var path = require('path');  
             this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
@@ -385,8 +395,8 @@ export class HomeComponent implements OnInit {
 
         GenerateAppReducer( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
         {  
-            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\reducers\\app_reducer.dart";
-            var fileToWrite = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\reducers\\app_reducer.dart";
+            var fileToCopy = this.projectBaseFlutterApp + "lib\\app\\backend\\reducers\\app_reducer.dart";
+            var fileToWrite = this.projectGeneratedFlutterApp + "backend\\reducers\\app_reducer.dart";
  
             var fs = require('fs'); 
             const { COPYFILE_EXCL } = fs.constants;
@@ -438,8 +448,8 @@ export class HomeComponent implements OnInit {
             var content = "";
 
 
-            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\middleware\\user_detail_middleware.dart";
-            var fileToWrite = "C:/Work/GenerateAnything/Generated/flutterapp/backend/middleware/" + _.snakeCase(tableName) + "_middleware.dart";
+            var fileToCopy = this.projectBaseFlutterApp + "lib\\app\\backend\\middleware\\user_detail_middleware.dart";
+            var fileToWrite = this.projectGeneratedFlutterApp + "/backend/middleware/" + _.snakeCase(tableName) + "_middleware.dart";
             
             var path = require('path');  
             this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
@@ -483,8 +493,8 @@ export class HomeComponent implements OnInit {
             var storedProcPrefix = "";
             var content = "";
 
-            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\states\\vehicle_route_state.dart";
-            var fileToWrite = "C:/Work/GenerateAnything/Generated/flutterapp/backend/states/" + _.snakeCase(tableName) + "_state.dart";
+            var fileToCopy = this.projectBaseFlutterApp + "lib\\app\\backend\\states\\vehicle_route_state.dart";
+            var fileToWrite = this.projectGeneratedFlutterApp + "/backend/states/" + _.snakeCase(tableName) + "_state.dart";
             
             var path = require('path');  
             this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
@@ -513,8 +523,8 @@ export class HomeComponent implements OnInit {
             var fs = require('fs'); 
             const { COPYFILE_EXCL } = fs.constants;
 
-            var fileToCopy ="C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\states\\states.dart";
-            var fileToWrite = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states\\states.dart";
+            var fileToCopy =this.projectBaseFlutterApp + "lib\\app\\backend\\states\\states.dart";
+            var fileToWrite = this.projectGeneratedFlutterApp + "backend\\states\\states.dart";
             
             var path = require('path');  
             this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
@@ -552,8 +562,8 @@ export class HomeComponent implements OnInit {
             var fs = require('fs'); 
             const { COPYFILE_EXCL } = fs.constants;
 
-            var fileToCopy ="C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\states\\app_state.dart";
-            var fileToWrite = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states\\app_state.dart";
+            var fileToCopy =this.projectBaseFlutterApp + "lib\\app\\backend\\states\\app_state.dart";
+            var fileToWrite = this.projectGeneratedFlutterApp + "backend\\states\\app_state.dart";
             
             var path = require('path');  
             this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
@@ -610,8 +620,8 @@ export class HomeComponent implements OnInit {
             var storedProcPrefix = "";
             var content = "";
 
-            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\repositories\\webservices\\user_detail_ws.dart";
-            var fileToWrite = "C:/Work/GenerateAnything/Generated/flutterapp/backend/repositories/webservices/" + _.snakeCase(tableName) + "_ws.dart";
+            var fileToCopy = this.projectBaseFlutterApp + "lib\\app\\backend\\repositories\\webservices\\user_detail_ws.dart";
+            var fileToWrite = this.projectGeneratedFlutterApp + "/backend/repositories/webservices/" + _.snakeCase(tableName) + "_ws.dart";
             
             var path = require('path');  
             this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
@@ -654,8 +664,8 @@ export class HomeComponent implements OnInit {
             var namespace = "namespace";
             var storedProcPrefix = "";
             var content = "";
-            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\repositories\\webservices\\webservices.dart";
-            var fileToWrite = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\repositories\\webservices\\webservices.dart";
+            var fileToCopy = this.projectBaseFlutterApp + "lib\\app\\backend\\repositories\\webservices\\webservices.dart";
+            var fileToWrite = this.projectGeneratedFlutterApp + "backend\\repositories\\webservices\\webservices.dart";
 
             var fs = require('fs'); 
             const { COPYFILE_EXCL } = fs.constants;
@@ -690,8 +700,8 @@ export class HomeComponent implements OnInit {
 
         GenerateAppRepository( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
         {  
-            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\repositories\\app_repository.dart";
-            var fileToWrite = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\repositories\\app_repository.dart";
+            var fileToCopy = this.projectBaseFlutterApp + "lib\\app\\backend\\repositories\\app_repository.dart";
+            var fileToWrite = this.projectGeneratedFlutterApp + "backend\\repositories\\app_repository.dart";
  
             var fs = require('fs'); 
             const { COPYFILE_EXCL } = fs.constants;
@@ -752,8 +762,8 @@ export class HomeComponent implements OnInit {
             var fs = require('fs'); 
             const { COPYFILE_EXCL } = fs.constants;
 
-            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\configurations\\configuration.dart";
-            var fileToWrite = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\configuration\\configuration.dart";
+            var fileToCopy = this.projectBaseFlutterApp + "lib\\app\\configurations\\configuration.dart";
+            var fileToWrite = this.projectGeneratedFlutterApp + "configuration\\configuration.dart";
   
             var path = require('path');  
             this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created 
@@ -790,13 +800,13 @@ export class HomeComponent implements OnInit {
             var content = "";
 
             var fileToCopy = "C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\models\\template_model.dart";
-            var fileToWrite = "C:/Work/GenerateAnything/Generated/flutterapp/backend/models/" + _.snakeCase(tableName) + "_model.dart";
+            var fileToWrite = this.projectGeneratedFlutterApp + "/backend/models/" + _.snakeCase(tableName) + "_model.dart";
   
             var path = require('path');  
             this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created 
 
             var fs = require('fs'); 
-          //  fs.readFile("C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\models\\user_details_model.dart", 'utf-8', (err, data) => {
+          //  fs.readFile(this.projectBaseFlutterApp + "lib\\app\\backend\\models\\user_details_model.dart", 'utf-8', (err, data) => {
             fs.readFile( fileToCopy, 'utf-8', (err, data) => {
                 if(err){
                     alert("An error ocurred reading the file :" + err.message);
@@ -854,8 +864,8 @@ export class HomeComponent implements OnInit {
 
        GenerateModelExport( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
         {  
-            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\models\\models.dart";
-            var fileToWrite = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\models\\models.dart";
+            var fileToCopy = this.projectBaseFlutterApp + "lib\\app\\backend\\models\\models.dart";
+            var fileToWrite = this.projectGeneratedFlutterApp + "backend\\models\\models.dart";
  
             var fs = require('fs'); 
             const { COPYFILE_EXCL } = fs.constants;
