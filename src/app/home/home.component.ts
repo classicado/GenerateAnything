@@ -285,9 +285,18 @@ export class HomeComponent implements OnInit {
             var namespace = "namespace";
             var storedProcPrefix = "";
             var content = "";
-
+ 
+            var fileToCopy = "C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\actions\\user_details_actions.dart";
+            var fileToWrite = "C:/Work/GenerateAnything/Generated/flutterapp/backend/actions/" + _.snakeCase(tableName) + "_actions.dart";
+ 
             var fs = require('fs'); 
-            fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\actions\\user_details_actions.dart", 'utf-8', (err, data) => {
+            const { COPYFILE_EXCL } = fs.constants;
+  
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created 
+ 
+            var fs = require('fs'); 
+            fs.readFile( fileToCopy, 'utf-8', (err, data) => {
                 if(err){
                     alert("An error ocurred reading the file :" + err.message);
                     return;
@@ -298,7 +307,7 @@ export class HomeComponent implements OnInit {
                 content = content.replace(/user_details/g, _.snakeCase(tableName));  
                 content = content.replace(/wcg_driver_app_mobile/g, packageName);  
 
-                this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/actions/" + _.snakeCase(tableName) + "_actions.dart",content); 
+                this.writeFile(fileToWrite,content); 
             });  
        }
 
@@ -345,8 +354,14 @@ export class HomeComponent implements OnInit {
             var storedProcPrefix = "";
             var content = "";
 
+            var fileToCopy = "C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\reducers\\user_details_reducer.dart";
+            var fileToWrite = "C:/Work/GenerateAnything/Generated/flutterapp/backend/reducers/" + _.snakeCase(tableName) + "_reducer.dart";
+  
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
+
             var fs = require('fs'); 
-            fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\reducers\\user_details_reducer.dart", 'utf-8', (err, data) => {
+            fs.readFile( fileToCopy, 'utf-8', (err, data) => {
                 if(err){
                     alert("An error ocurred reading the file :" + err.message);
                     return;
@@ -364,7 +379,7 @@ export class HomeComponent implements OnInit {
                 console.log( this.toLowerCamelCase("AdolfMapadimeng"));
                 console.log( _.camelCase("AdolfMapadimeng"));*/
 
-                this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/reducers/" + _.snakeCase(tableName) + "_reducer.dart",content); 
+                this.writeFile(fileToWrite,content); 
             });  
        }
 
@@ -422,8 +437,16 @@ export class HomeComponent implements OnInit {
             var storedProcPrefix = "";
             var content = "";
 
+
+            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\middleware\\user_detail_middleware.dart";
+            var fileToWrite = "C:/Work/GenerateAnything/Generated/flutterapp/backend/middleware/" + _.snakeCase(tableName) + "_middleware.dart";
+            
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
+ 
+
             var fs = require('fs'); 
-            fs.readFile("C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\middleware\\user_detail_middleware.dart", 'utf-8', (err, data) => {
+            fs.readFile( fileToCopy, 'utf-8', (err, data) => {
             //fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\middleware\\user_detail_middleware.dart", 'utf-8', (err, data) => {
                 if(err){
                     alert("An error ocurred reading the file :" + err.message);
@@ -451,7 +474,7 @@ export class HomeComponent implements OnInit {
                 }
  
                 content = content.replace(/store ,/g, block_1);
-                this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/middleware/" + _.snakeCase(tableName) + "_middleware.dart",content); 
+                this.writeFile( fileToWrite,content); 
             });  
        }
         GenerateState( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
@@ -460,8 +483,14 @@ export class HomeComponent implements OnInit {
             var storedProcPrefix = "";
             var content = "";
 
+            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\states\\vehicle_route_state.dart";
+            var fileToWrite = "C:/Work/GenerateAnything/Generated/flutterapp/backend/states/" + _.snakeCase(tableName) + "_state.dart";
+            
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
+ 
             var fs = require('fs'); 
-            fs.readFile("C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\states\\vehicle_route_state.dart", 'utf-8', (err, data) => {
+            fs.readFile(fileToCopy, 'utf-8', (err, data) => {
             //fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\states\\vehicle_route_state.dart", 'utf-8', (err, data) => {
                 if(err){
                     alert("An error ocurred reading the file :" + err.message);
@@ -472,7 +501,7 @@ export class HomeComponent implements OnInit {
                  content = content.replace(/vehicleRoute/g, _.camelCase(tableName)); 
                 content = content.replace(/wcg_driver_app_mobile/g, packageName);  
   
-                this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/states/" + _.snakeCase(tableName) + "_state.dart",content); 
+                this.writeFile(fileToWrite,content); 
             });  
        }
         GenerateStateExport( dbName: string,tableName: string,  modelName: string,columns: any, packageName: string) : void
@@ -484,19 +513,20 @@ export class HomeComponent implements OnInit {
             var fs = require('fs'); 
             const { COPYFILE_EXCL } = fs.constants;
 
-            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp");
-            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend");
-            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states");
+            var fileToCopy ="C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\states\\states.dart";
+            var fileToWrite = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states\\states.dart";
+            
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
  
-            fs.copyFile("C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\states\\states.dart", 
-                "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states\\states.dart", 
+            fs.copyFile(fileToCopy,fileToWrite , 
                 COPYFILE_EXCL,(err)=>{
  
                 if(err){
                    console.log("An error ocurred reading the file :" + err.message); 
                 } 
 
-                fs.readFile("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states\\states.dart", 'utf-8', (err, data) => {
+                fs.readFile(fileToWrite, 'utf-8', (err, data) => {
                  
                     if(err){
                         alert("An error ocurred reading the file :" + err.message);
@@ -509,7 +539,7 @@ export class HomeComponent implements OnInit {
                         content = content.replace("export 'app_state.dart'; ", "export 'app_state.dart'; \n"+ newLine);
                     }
                       
-                    this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/states/states.dart",content); 
+                    this.writeFile(fileToWrite,content); 
                 });  
             }); 
        }
@@ -522,19 +552,20 @@ export class HomeComponent implements OnInit {
             var fs = require('fs'); 
             const { COPYFILE_EXCL } = fs.constants;
 
-            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp");
-            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend");
-            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states");
+            var fileToCopy ="C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\states\\app_state.dart";
+            var fileToWrite = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states\\app_state.dart";
+            
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
  
-            fs.copyFile("C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\states\\app_state.dart", 
-                "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states\\app_state.dart", 
-                COPYFILE_EXCL,(err)=>{
+ 
+            fs.copyFile(fileToCopy, fileToWrite ,  COPYFILE_EXCL,(err)=>{
  
                 if(err){
                    console.log("An error ocurred reading the file :" + err.message); 
                 } 
 
-                fs.readFile("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\states\\app_state.dart", 'utf-8', (err, data) => {
+                fs.readFile(fileToWrite, 'utf-8', (err, data) => {
                  
                     if(err){
                         alert("An error ocurred reading the file :" + err.message);
@@ -565,7 +596,7 @@ export class HomeComponent implements OnInit {
                     }
                     
                     content = content.replace(/wcg_driver_app_mobile/g, packageName);
-                    this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/states/app_state.dart",content); 
+                    this.writeFile(fileToWrite,content); 
                 });  
             }); 
        }
@@ -579,8 +610,14 @@ export class HomeComponent implements OnInit {
             var storedProcPrefix = "";
             var content = "";
 
+            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\repositories\\webservices\\user_detail_ws.dart";
+            var fileToWrite = "C:/Work/GenerateAnything/Generated/flutterapp/backend/repositories/webservices/" + _.snakeCase(tableName) + "_ws.dart";
+            
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
+
             var fs = require('fs'); 
-            fs.readFile("C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\repositories\\webservices\\user_detail_ws.dart", 'utf-8', (err, data) => {
+            fs.readFile(fileToCopy, 'utf-8', (err, data) => {
             //fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\repositories\\webservices\\user_detail_ws.dart", 'utf-8', (err, data) => {
                 if(err){
                     alert("An error ocurred reading the file :" + err.message);
@@ -608,7 +645,7 @@ export class HomeComponent implements OnInit {
                 }
  
                 content = content.replace(/"PkUserDetailId": 0,/g, block_1);
-                this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/repositories/webservices/" + _.snakeCase(tableName) + "_ws.dart",content); 
+                this.writeFile(fileToWrite,content); 
             });  
        }
 
@@ -623,7 +660,8 @@ export class HomeComponent implements OnInit {
             var fs = require('fs'); 
             const { COPYFILE_EXCL } = fs.constants;
  
-            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\backend\\repositories\\webservices");
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
  
             fs.copyFile(fileToCopy,  fileToWrite, COPYFILE_EXCL,(err)=>{
  
@@ -714,15 +752,16 @@ export class HomeComponent implements OnInit {
             var fs = require('fs'); 
             const { COPYFILE_EXCL } = fs.constants;
 
-            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp");
-            this.createFolder("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\configuration");
+            var fileToCopy = "C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\configurations\\configuration.dart";
+            var fileToWrite = "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\configuration\\configuration.dart";
+  
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created 
 
 
-            fs.copyFile("C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\configurations\\configuration.dart", 
-                "C:\\Work\\GenerateAnything\\Generated\\flutterapp\\configuration\\configuration.dart", 
-                COPYFILE_EXCL,(err)=>{
+            fs.copyFile(fileToCopy, fileToWrite , COPYFILE_EXCL,(err)=>{
  
-                fs.readFile("C:\\Work\\GenerateAnything\\Generated\\flutterapp\\configuration\\configuration.dart", 'utf-8', (err, data) => {
+                fs.readFile(fileToWrite, 'utf-8', (err, data) => {
                  
                     if(err){
                         alert("An error ocurred reading the file :" + err.message);
@@ -739,7 +778,7 @@ export class HomeComponent implements OnInit {
                         content = content.replace(');//AppRepository',"\t"+ newLine + "\n\t\t);//AppRepository");
                     }
                       
-                    this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/configuration/configuration.dart",content); 
+                    this.writeFile(fileToWrite,content); 
                 });  
             }); 
        }
@@ -750,9 +789,15 @@ export class HomeComponent implements OnInit {
             var storedProcPrefix = "";
             var content = "";
 
+            var fileToCopy = "C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\models\\template_model.dart";
+            var fileToWrite = "C:/Work/GenerateAnything/Generated/flutterapp/backend/models/" + _.snakeCase(tableName) + "_model.dart";
+  
+            var path = require('path');  
+            this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created 
+
             var fs = require('fs'); 
           //  fs.readFile("C:\\Work\\FlutterApps\\fuseit\\DriverApp\\wc_driver_mobile_app\\lib\\app\\backend\\models\\user_details_model.dart", 'utf-8', (err, data) => {
-            fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\FlutterApp\\backend\\models\\template_model.dart", 'utf-8', (err, data) => {
+            fs.readFile( fileToCopy, 'utf-8', (err, data) => {
                 if(err){
                     alert("An error ocurred reading the file :" + err.message);
                     return;
@@ -803,7 +848,7 @@ export class HomeComponent implements OnInit {
                 content = content.replace(/block_3/g, block_3);
                 content = content.replace(/block_4/g, block_4);
                 content = content.replace(/block_5/g, block_5);
-                this.writeFile("C:/Work/GenerateAnything/Generated/flutterapp/backend/models/" + _.snakeCase(tableName) + "_model.dart",content); 
+                this.writeFile(fileToWrite,content); 
             });  
        }
 
@@ -877,13 +922,14 @@ export class HomeComponent implements OnInit {
             var namespace = "namespace";
             var storedProcPrefix = "";
             var content = "";
+            var fileToCopy = "C:\\Work\\GenerateAnything\\src\\templates\\controllerTemplate.txt";
             var fileToWrite = "C:\\Work\\BaseAPI\\API\\Source\\Dev\\API\\XbaseAPI\\Controllers\\"+tableName+"\\controller."+tableName+".cs";
            
             var path = require('path');  
             this.createFolder( path.dirname(fileToWrite) ); //Ensure the required folders are created
 
             var fs = require('fs'); 
-            fs.readFile("C:\\Work\\GenerateAnything\\src\\templates\\controllerTemplate.txt", 'utf-8', (err, data) => {
+            fs.readFile( fileToCopy, 'utf-8', (err, data) => {
                 if(err){
                     alert("An error ocurred reading the file :" + err.message);
                     return;
